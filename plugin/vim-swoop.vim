@@ -4,6 +4,7 @@
 " Visual Mode
 " Incremental Swoop
 " Multi Buffer
+" Only one instance
 
 function! s:extractLine()
     return [bufnr('%'), line('.'), getline('.')]
@@ -104,11 +105,10 @@ function! SwoopMatchingBuffer()
     "call s:initSwoop(allBuf, pattern)
 endfunction
 
-map <Leader>gg :call SwoopCurrentBuffer()<CR>
-map <Leader>gc :call SwoopAllBuffer()<CR>
+map <Leader>gc :call SwoopCurrentBuffer()<CR>
+map <Leader>gg :call SwoopAllBuffer()<CR>
 
 autocmd!  CursorMoved    swoopBuf      :call s:moveSwoopCursor()
 
 autocmd!  BufUnload    swoopBuf      :call s:quitSwoop()
 autocmd!  BufLeave    swoopBuf      :call s:quitSwoop()
-autocmd!  BufWriteCmd    swoopBuf      :call s:saveSwoop()
