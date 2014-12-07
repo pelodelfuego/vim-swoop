@@ -44,6 +44,12 @@ function! s:quitSwoop()
     call setpos('.', s:beforeSwoopCurPos)
 endfunction
 
+function s:swoopSelect()
+    echo 'select'
+    sleep 1
+    silent bdelete! swoopBuf
+endfunction
+
 function! s:saveSwoop ()
     execute "g/.*/call s:replaceSwoopLine(getline('.'))"
     execute ":1"
@@ -98,15 +104,19 @@ function! SwoopAllBuffer()
     call s:initSwoop(allBuf, pattern)
 endfunction
 
-
 function! SwoopMatchingBuffer()
     "let pattern = s:findSwoopPattern()
     "let allBuf = filter(range(1, bufnr('$')), 'buflisted(v:val)') 
     "call s:initSwoop(allBuf, pattern)
 endfunction
 
+
+
+
 map <Leader>gc :call SwoopCurrentBuffer()<CR>
 map <Leader>gg :call SwoopAllBuffer()<CR>
+
+map <CR> :call s:swoopSelect()<CR>
 
 autocmd!  CursorMoved    swoopBuf      :call s:moveSwoopCursor()
 
