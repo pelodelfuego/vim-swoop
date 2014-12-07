@@ -104,8 +104,8 @@ function! SwoopMatchingBuffer()
     "call s:initSwoop(allBuf, pattern)
 endfunction
 
-map <silent>  ;l  :call SwoopCurrentBuffer()<CR>
-map <silent>  ;k  :call SwoopAllBuffer()<CR>
+map <Leader>gg :call SwoopCurrentBuffer()<CR>
+map <Leader>gc :call SwoopAllBuffer()<CR>
 
 autocmd!  CursorMoved    swoopBuf      :call s:moveSwoopCursor()
 
