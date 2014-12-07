@@ -98,6 +98,12 @@ function! SwoopAllBuffer()
 endfunction
 
 
+function! SwoopMatchingBuffer()
+    "let pattern = s:findSwoopPattern()
+    "let allBuf = filter(range(1, bufnr('$')), 'buflisted(v:val)') 
+    "call s:initSwoop(allBuf, pattern)
+endfunction
+
 map <silent>  ;l  :call SwoopCurrentBuffer()<CR>
 map <silent>  ;k  :call SwoopAllBuffer()<CR>
 
