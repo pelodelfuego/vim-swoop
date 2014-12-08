@@ -13,7 +13,10 @@ endfunction
 function! s:initSwoop(bufList, pattern)
     let s:beforeSwoopCurPos = getpos('.')
     let s:beforeSwoopBuffer = bufname('%')
-
+    if buflisted('swoopBuf') "not Working
+        echo 'Swoop instance already Loaded'
+        return
+    endif
     " init
     let orig_ft = &ft
     let results = []
@@ -34,7 +37,9 @@ function! s:initSwoop(bufList, pattern)
     let s:swoopWindow = bufwinnr(bufname('%'))
     call append(1, results)
     1d
-
+    
+    "highlight rightMargin term=bold ctermfg=red guifg=red
+	"execute ":match rightMargin /".a:pattern."/"
 endfunction
 
 function! s:quitSwoop()
@@ -116,7 +121,7 @@ endfunction
 map <Leader>gc :call SwoopCurrentBuffer()<CR>
 map <Leader>gg :call SwoopAllBuffer()<CR>
 
-map <CR> :call s:swoopSelect()<CR>
+"map <CR> :call s:swoopSelect()<CR>
 
 autocmd!  CursorMoved    swoopBuf      :call s:moveSwoopCursor()
 
