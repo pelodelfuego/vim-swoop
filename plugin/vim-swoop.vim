@@ -16,19 +16,25 @@ function! s:initSwoop(bufList, pattern)
         echo 'Swoop instance already Loaded'
         return
     endif
-    " init
+
     let orig_ft = &ft
     let results = []
-    
+
     for currentBuffer in a:bufList
         execute "buffer ". currentBuffer
-        call add(results, "-------------------------------------------------")
-        call add(results, bufname('%')) 
-        call add(results, "-------------------------------------------------")
-        silent execute 'g/' . a:pattern . "/call add(results, join(s:extractLine(),'\t'))"
-        call add(results, "") 
-    endfor    
 
+        let currentBufferResults = []
+        silent execute 'g/' . a:pattern . "/call add(currentBufferResults, join(s:extractLine(),'\t'))"
+
+        if !empty(currentBufferResults)
+            call add(results, "-------------------------------------------------")
+            call add(results, bufname('%')) 
+            call add(results, "-------------------------------------------------")
+            call extend(results, currentBufferResults)
+            call add(results, "") 
+        endif
+    endfor    
+    
     " create swoop buffer
     let s:displayWindow = bufwinnr(bufname('%'))
     silent bot split swoopBuf
@@ -114,19 +120,17 @@ function! SwoopMatchingBuffer()
     "call s:initSwoop(allBuf, pattern)
 endfunction
 
-function! SwoopSelect()
-    echo "select"
-    sleep
-endfunction
 
 
-map <Leader>gc :call SwoopCurrentBuffer()<CR>
-map <Leader>gg :call SwoopAllBuffer()<CR>
+noremap <Leader>gc :call SwoopCurrentBuffer()<CR>
+noremap <Leader>gg :call SwoopAllBuffer()<CR>
 
 noremap <buffer> <CR> :call SwoopSelect()<CR>
 
-autocmd!  CursorMoved    swoopBuf      :call s:moveSwoopCursor()
+augroup swoopAutoCmd
+    autocmd!  CursorMoved    swoopBuf      :call s:moveSwoopCursor()
 
-autocmd!  BufUnload    swoopBuf      :call s:quitSwoop()
-autocmd!  BufLeave    swoopBuf      :call s:quitSwoop()
-autocmd!  BufWriteCmd    swoopBuf      :call s:saveSwoop()
+    autocmd!  BufUnload    swoopBuf      :call s:quitSwoop()
+    autocmd!  BufLeave    swoopBuf      :call s:quitSwoop()
+    autocmd!  BufWriteCmd    swoopBuf      :call s:saveSwoop()
+augroup END
