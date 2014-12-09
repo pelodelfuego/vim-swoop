@@ -3,7 +3,6 @@
 " Highlight pattern
 " Visual Mode
 " Incremental Swoop
-" Multi Buffer
 " Only one instance
 
 function! s:extractLine()
@@ -115,15 +114,19 @@ function! SwoopMatchingBuffer()
     "call s:initSwoop(allBuf, pattern)
 endfunction
 
-
+function! SwoopSelect()
+    echo "select"
+    sleep
+endfunction
 
 
 map <Leader>gc :call SwoopCurrentBuffer()<CR>
 map <Leader>gg :call SwoopAllBuffer()<CR>
 
-"map <CR> :call s:swoopSelect()<CR>
+noremap <buffer> <CR> :call SwoopSelect()<CR>
 
 autocmd!  CursorMoved    swoopBuf      :call s:moveSwoopCursor()
 
 autocmd!  BufUnload    swoopBuf      :call s:quitSwoop()
 autocmd!  BufLeave    swoopBuf      :call s:quitSwoop()
+autocmd!  BufWriteCmd    swoopBuf      :call s:saveSwoop()
