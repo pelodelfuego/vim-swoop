@@ -12,10 +12,7 @@ endfunction
 function! s:initSwoop(bufList, pattern)
     let s:beforeSwoopCurPos = getpos('.')
     let s:beforeSwoopBuffer = bufname('%')
-    if buflisted('swoopBuf') "not Working
-        echo 'Swoop instance already Loaded'
-        return
-    endif
+
     " init
     let orig_ft = &ft
     let results = []
