@@ -11,13 +11,14 @@ function! s:extractLine()
 endfunction
 
 function! s:initSwoop(bufList, pattern)
-    let s:beforeSwoopCurPos = getpos('.')
-    let s:beforeSwoopBuffer = bufname('%')
     if buflisted('swoopBuf') "not Working
         echo 'Swoop instance already Loaded'
+        sleep 2
         return
     endif
 
+    let s:beforeSwoopCurPos = getpos('.')
+    let s:beforeSwoopBuffer = bufname('%')
     let orig_ft = &ft
     let results = []
     
@@ -131,7 +132,7 @@ endfunction
 function! SwoopMatchingBuffer()
     "let pattern = s:findSwoopPattern()
     "let allBuf = filter(range(1, bufnr('$')), 'buflisted(v:val)') 
-    "call s:initSwoop(allBuf, pattern)
+    
 endfunction
 
 
