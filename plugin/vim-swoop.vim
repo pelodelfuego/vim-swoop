@@ -2,7 +2,6 @@
 " <CR> goto and Quit
 " Visual Mode
 " Incremental Swoop
-" Only one instance
 
 highlight swoopMatch term=bold ctermbg=magenta guibg=magenta ctermfg=white guifg=white
 
