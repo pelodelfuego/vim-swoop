@@ -1,9 +1,10 @@
 " TODO LIST
 " <CR> goto and Quit
-" Highlight pattern
 " Visual Mode
 " Incremental Swoop
 " Only one instance
+
+highlight swoopMatch term=bold ctermbg=magenta guibg=magenta ctermfg=white guifg=white
 
 function! s:extractLine()
     return [bufnr('%'), line('.'), getline('.')]
@@ -19,32 +20,40 @@ function! s:initSwoop(bufList, pattern)
 
     let orig_ft = &ft
     let results = []
-
+    
+    " fetch results in buffer list
     for currentBuffer in a:bufList
-        execute "buffer ". currentBuffer
-
-        let currentBufferResults = []
-        silent execute 'g/' . a:pattern . "/call add(currentBufferResults, join(s:extractLine(),'\t'))"
-
-        if !empty(currentBufferResults)
-            call add(results, "-------------------------------------------------")
-            call add(results, bufname('%')) 
-            call add(results, "-------------------------------------------------")
-            call extend(results, currentBufferResults)
-            call add(results, "") 
-        endif
+        call s:fetchPatternInBuffer(results, currentBuffer, a:pattern)
     endfor    
     
     " create swoop buffer
+	execute ":match swoopMatch /".a:pattern."/"
+    call s:createSwoopBuffer(results, orig_ft)
+	execute ":match swoopMatch /".a:pattern."/"
+    
+endfunction
+
+function s:fetchPatternInBuffer(results, buffer, pattern)
+    execute "buffer ". a:buffer
+    let currentBufferResults = []
+        silent execute 'g/' . a:pattern . "/call add(currentBufferResults, join(s:extractLine(),'\t'))"
+
+        if !empty(currentBufferResults)
+            call add(a:results, "-------------------------------------------------")
+            call add(a:results, bufname('%')) 
+            call add(a:results, "-------------------------------------------------")
+            call extend(a:results, currentBufferResults)
+            call add(a:results, "") 
+        endif
+endfunction
+
+function s:createSwoopBuffer(results, fileType)
     let s:displayWindow = bufwinnr(bufname('%'))
     silent bot split swoopBuf
-    execute "setlocal filetype=".orig_ft
+    execute "setlocal filetype=".a:fileType
     let s:swoopWindow = bufwinnr(bufname('%'))
-    call append(1, results)
+    call append(1, a:results)
     1d
-    
-    "highlight rightMargin term=bold ctermfg=red guifg=red
-	"execute ":match rightMargin /".a:pattern."/"
 endfunction
 
 function! s:quitSwoop()
