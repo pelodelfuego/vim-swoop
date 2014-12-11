@@ -1,57 +1,91 @@
 " TODO LIST
-" <CR> goto and Quit
-" Highlight pattern
 " Visual Mode
+" Matching buffer swoop
 " Incremental Swoop
-" Only one instance
+
 
 function! s:extractLine()
     return [bufnr('%'), line('.'), getline('.')]
 endfunction
 
+function s:swoopRunning()
+    return buflisted('swoopBuf') 
+endfunction
+
 function! s:initSwoop(bufList, pattern)
+    if s:swoopRunning()
+        echo 'Swoop instance already Loaded'
+        return
+    endif
+
     let s:beforeSwoopCurPos = getpos('.')
     let s:beforeSwoopBuffer = bufname('%')
-
-    " init
     let orig_ft = &ft
     let results = []
     
+    " fetch results in buffer list
     for currentBuffer in a:bufList
-        execute "buffer ". currentBuffer
-        call add(results, "-------------------------------------------------")
-        call add(results, bufname('%')) 
-        call add(results, "-------------------------------------------------")
-        silent execute 'g/' . a:pattern . "/call add(results, join(s:extractLine(),'\t'))"
-        call add(results, "") 
+        call s:fetchPatternInBuffer(results, currentBuffer, a:pattern)
     endfor    
-
-    " create swoop buffer
-    let s:displayWindow = bufwinnr(bufname('%'))
-    silent bot split swoopBuf
-    execute "setlocal filetype=".orig_ft
-    let s:swoopWindow = bufwinnr(bufname('%'))
-    call append(1, results)
-    1d
     
-    "highlight rightMargin term=bold ctermfg=red guifg=red
-	"execute ":match rightMargin /".a:pattern."/"
+    " create swoop buffer
+    highlight swoopMatch term=bold ctermbg=magenta guibg=magenta ctermfg=white guifg=white
+	execute ":match swoopMatch /".a:pattern."/"
+    call s:createSwoopBuffer(results, orig_ft)
+	execute ":match swoopMatch /".a:pattern."/"
+    
 endfunction
 
-function! s:quitSwoop()
-    silent bdelete! swoopBuf
+function s:fetchPatternInBuffer(results, buffer, pattern)
+    execute "buffer ". a:buffer
+    let currentBufferResults = []
+        silent execute 'g/' . a:pattern . "/call add(currentBufferResults, join(s:extractLine(),'\t'))"
+
+        if !empty(currentBufferResults)
+            call add(a:results, "-------------------------------------------------")
+            call add(a:results, bufname('%')) 
+            call add(a:results, "-------------------------------------------------")
+            call extend(a:results, currentBufferResults)
+            call add(a:results, "") 
+        endif
+endfunction
+
+function s:createSwoopBuffer(results, fileType)
+    let s:displayWindow = bufwinnr(bufname('%'))
+    
+    silent bot split swoopBuf
+    execute "setlocal filetype=".a:fileType
+    noremap <buffer> <silent> <CR> :call SwoopSelect()<CR>
+
+    let s:swoopWindow = bufwinnr(bufname('%'))
+    call append(1, a:results)
+    1d
+endfunction
+
+function! s:exitSwoop()
+    if s:swoopRunning()
+        silent bdelete! swoopBuf
+        highlight clear swoopMatch
+    endif
+endfunction
+
+function s:swoopQuit()
+    call s:exitSwoop()
     execute s:displayWindow." wincmd w"
     execute "buffer ". s:beforeSwoopBuffer
     call setpos('.', s:beforeSwoopCurPos)
 endfunction
 
-function s:swoopSelect()
-    echo 'select'
-    sleep 1
-    silent bdelete! swoopBuf
+function SwoopSelect()
+    let swoopLine = split(getline('.'), '\t')
+    call s:exitSwoop()
+    if len(swoopLine) >= 3
+        execute "buffer ". swoopLine[0]
+        execute ":".swoopLine[1]
+    endif
 endfunction
 
-function! s:saveSwoop ()
+function! s:swoopSave ()
     execute "g/.*/call s:replaceSwoopLine(getline('.'))"
     execute ":1"
 endfunction
@@ -108,22 +142,17 @@ endfunction
 function! SwoopMatchingBuffer()
     "let pattern = s:findSwoopPattern()
     "let allBuf = filter(range(1, bufnr('$')), 'buflisted(v:val)') 
-    "call s:initSwoop(allBuf, pattern)
-endfunction
-
-function! SwoopSelect()
-    echo "select"
-    sleep
 endfunction
 
 
-map <Leader>gc :call SwoopCurrentBuffer()<CR>
-map <Leader>gg :call SwoopAllBuffer()<CR>
+noremap <Leader>gc :call SwoopCurrentBuffer()<CR>
+noremap <Leader>gg :call SwoopAllBuffer()<CR>
 
-noremap <buffer> <CR> :call SwoopSelect()<CR>
 
-autocmd!  CursorMoved    swoopBuf      :call s:moveSwoopCursor()
+augroup swoopAutoCmd
+    autocmd!  CursorMoved    swoopBuf      :call s:moveSwoopCursor()
 
-autocmd!  BufUnload    swoopBuf      :call s:quitSwoop()
-autocmd!  BufLeave    swoopBuf      :call s:quitSwoop()
-autocmd!  BufWriteCmd    swoopBuf      :call s:saveSwoop()
+    autocmd!  BufUnload    swoopBuf      :call s:swoopQuit()
+    autocmd!  BufLeave    swoopBuf      :call s:swoopQuit()
+    autocmd!  BufWriteCmd    swoopBuf      :call s:swoopSave()
+augroup END
