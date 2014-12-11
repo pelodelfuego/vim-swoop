@@ -1,6 +1,7 @@
 " TODO LIST
 " <CR> goto and Quit
 " Visual Mode
+" Matching buffer swoop
 " Incremental Swoop
 
 
@@ -77,9 +78,12 @@ function s:swoopQuit()
 endfunction
 
 function SwoopSelect()
-    echo "select "
-    sleep 1
+    let swoopLine = split(getline('.'), '\t')
     call s:exitSwoop()
+    if len(swoopLine) >= 3
+        execute "buffer ". swoopLine[0]
+        execute ":".swoopLine[1]
+    endif
 endfunction
 
 function! s:swoopSave ()
