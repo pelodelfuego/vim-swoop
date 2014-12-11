@@ -1,5 +1,4 @@
 " TODO LIST
-" <CR> goto and Quit
 " Visual Mode
 " Matching buffer swoop
 " Incremental Swoop
