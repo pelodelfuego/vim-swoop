@@ -11,9 +11,8 @@ function! s:extractLine()
 endfunction
 
 function! s:initSwoop(bufList, pattern)
-    if buflisted('swoopBuf') "not Working
+    if buflisted('swoopBuf')
         echo 'Swoop instance already Loaded'
-        sleep 2
         return
     endif
 
