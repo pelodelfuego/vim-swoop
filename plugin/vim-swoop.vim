@@ -56,8 +56,13 @@ function s:createSwoopBuffer(results, fileType)
     1d
 endfunction
 
-function! s:quitSwoop()
+function! s:exitSwoop()
     silent bdelete! swoopBuf
+    highlight clear swoopMatch
+endfunction
+
+function s:swoopQuit()
+    call s:exitSwoop()
     execute s:displayWindow." wincmd w"
     execute "buffer ". s:beforeSwoopBuffer
     call setpos('.', s:beforeSwoopCurPos)
@@ -66,10 +71,10 @@ endfunction
 function s:swoopSelect()
     echo 'select'
     sleep 1
-    silent bdelete! swoopBuf
+    call s:exitSwoop()
 endfunction
 
-function! s:saveSwoop ()
+function! s:swoopSave ()
     execute "g/.*/call s:replaceSwoopLine(getline('.'))"
     execute ":1"
 endfunction
@@ -139,7 +144,7 @@ noremap <buffer> <CR> :call SwoopSelect()<CR>
 augroup swoopAutoCmd
     autocmd!  CursorMoved    swoopBuf      :call s:moveSwoopCursor()
 
-    autocmd!  BufUnload    swoopBuf      :call s:quitSwoop()
-    autocmd!  BufLeave    swoopBuf      :call s:quitSwoop()
-    autocmd!  BufWriteCmd    swoopBuf      :call s:saveSwoop()
+    autocmd!  BufUnload    swoopBuf      :call s:swoopQuit()
+    autocmd!  BufLeave    swoopBuf      :call s:swoopQuit()
+    autocmd!  BufWriteCmd    swoopBuf      :call s:swoopSave()
 augroup END
