@@ -22,11 +22,11 @@ How To
 
 Commnands
 ---------
-* SwoopAllBuffer(pattern)  <Leader>gg
+* SwoopAllBuffer(pattern)  \<Leader\>gg
 Will seek for the pattern in all buffers
 
-* SwoopCurrentBuffer(pattern)  <Leaded>gc
-Will seek in all oppened buffers
+* SwoopCurrentBuffer(pattern)  \<Leaded\>gc
+Will seek in current buffer
 
 
 
