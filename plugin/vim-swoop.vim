@@ -9,11 +9,14 @@ function! s:extractLine()
     return [bufnr('%'), line('.'), getline('.')]
 endfunction
 
+function s:swoopRunning()
+    return buflisted('swoopBuf') 
+endfunction
+
 function! s:initSwoop(bufList, pattern)
-    if buflisted('swoopBuf')
+    if s:swoopRunning
         echo 'Swoop instance already Loaded'
         return
-    endif
 
     let s:beforeSwoopCurPos = getpos('.')
     let s:beforeSwoopBuffer = bufname('%')
@@ -48,16 +51,20 @@ endfunction
 
 function s:createSwoopBuffer(results, fileType)
     let s:displayWindow = bufwinnr(bufname('%'))
+    
     silent bot split swoopBuf
     execute "setlocal filetype=".a:fileType
+    noremap <buffer> <silent> <CR> :call SwoopSelect()<CR>
+
     let s:swoopWindow = bufwinnr(bufname('%'))
     call append(1, a:results)
     1d
 endfunction
 
 function! s:exitSwoop()
-    silent bdelete! swoopBuf
-    highlight clear swoopMatch
+    if s:swoopRunning()
+        silent bdelete! swoopBuf
+        highlight clear swoopMatch
 endfunction
 
 function s:swoopQuit()
@@ -67,9 +74,7 @@ function s:swoopQuit()
     call setpos('.', s:beforeSwoopCurPos)
 endfunction
 
-function s:swoopSelect()
-    echo 'select'
-    sleep 1
+function SwoopSelect()
     call s:exitSwoop()
 endfunction
 
@@ -130,15 +135,12 @@ endfunction
 function! SwoopMatchingBuffer()
     "let pattern = s:findSwoopPattern()
     "let allBuf = filter(range(1, bufnr('$')), 'buflisted(v:val)') 
-    
 endfunction
-
 
 
 noremap <Leader>gc :call SwoopCurrentBuffer()<CR>
 noremap <Leader>gg :call SwoopAllBuffer()<CR>
 
-noremap <buffer> <CR> :call SwoopSelect()<CR>
 
 augroup swoopAutoCmd
     autocmd!  CursorMoved    swoopBuf      :call s:moveSwoopCursor()
