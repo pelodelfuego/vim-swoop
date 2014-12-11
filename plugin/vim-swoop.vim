@@ -3,7 +3,6 @@
 " Visual Mode
 " Incremental Swoop
 
-highlight swoopMatch term=bold ctermbg=magenta guibg=magenta ctermfg=white guifg=white
 
 function! s:extractLine()
     return [bufnr('%'), line('.'), getline('.')]
@@ -14,9 +13,10 @@ function s:swoopRunning()
 endfunction
 
 function! s:initSwoop(bufList, pattern)
-    if s:swoopRunning
+    if s:swoopRunning()
         echo 'Swoop instance already Loaded'
         return
+    endif
 
     let s:beforeSwoopCurPos = getpos('.')
     let s:beforeSwoopBuffer = bufname('%')
@@ -29,6 +29,7 @@ function! s:initSwoop(bufList, pattern)
     endfor    
     
     " create swoop buffer
+    highlight swoopMatch term=bold ctermbg=magenta guibg=magenta ctermfg=white guifg=white
 	execute ":match swoopMatch /".a:pattern."/"
     call s:createSwoopBuffer(results, orig_ft)
 	execute ":match swoopMatch /".a:pattern."/"
@@ -65,6 +66,7 @@ function! s:exitSwoop()
     if s:swoopRunning()
         silent bdelete! swoopBuf
         highlight clear swoopMatch
+    endif
 endfunction
 
 function s:swoopQuit()
@@ -75,6 +77,8 @@ function s:swoopQuit()
 endfunction
 
 function SwoopSelect()
+    echo "select "
+    sleep 1
     call s:exitSwoop()
 endfunction
 
