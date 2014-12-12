@@ -2,7 +2,7 @@
 " Visual Mode
 " Matching buffer swoop
 " Incremental Swoop
-
+" Center highlight swoop line
 
 function! s:extractLine()
     return [bufnr('%'), line('.'), getline('.')]
@@ -30,6 +30,7 @@ function! s:initSwoop(bufList, pattern)
     
     " create swoop buffer
     highlight swoopMatch term=bold ctermbg=magenta guibg=magenta ctermfg=white guifg=white
+    highlight swoopCurrentLine term=bold ctermbg=yellow guibg=yellow 
 	execute ":match swoopMatch /".a:pattern."/"
     call s:createSwoopBuffer(results, orig_ft)
 	execute ":match swoopMatch /".a:pattern."/"
@@ -94,6 +95,7 @@ function! s:gotoBufferLineKeepFocus(bufname, line)
     execute s:displayWindow." wincmd w"
     execute "buffer ". a:bufname
     execute ":".a:line
+    call Center()
     execute "wincmd p"
 endfunction
 
