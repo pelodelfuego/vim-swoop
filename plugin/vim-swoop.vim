@@ -2,7 +2,6 @@
 " Visual Mode
 " Matching buffer swoop
 " Incremental Swoop
-" Center highlight swoop line
 
 function! s:extractLine()
     return [bufnr('%'), line('.'), getline('.')]
