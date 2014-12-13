@@ -2,7 +2,7 @@
 " Visual Mode
 " Matching buffer swoop
 " Incremental Swoop
-
+" Add CI to match pattern
 
 function! s:extractLine()
     return [bufnr('%'), line('.'), getline('.')]
@@ -10,6 +10,25 @@ endfunction
 
 function s:swoopRunning()
     return buflisted('swoopBuf') 
+endfunction
+
+function s:initSwoopConfig()
+    highlight swoopMatch term=bold ctermbg=magenta guibg=magenta ctermfg=white guifg=white
+    
+    redir => s:initCursorLine
+    silent execute 'highlight CursorLine'
+    redir END
+    highlight CursorLine term=bold ctermbg=yellow guibg=yellow 
+
+    let s:initScrollOff = &g:scrolloff
+    set scrolloff=1000
+endfunction
+
+function s:restoreConfig()
+    highlight clear swoopMatch
+    execute 'highlight CursorLine'.split(s:initCursorLine, 'xxx')[1]
+
+    execute "set scrolloff=".s:initScrollOff
 endfunction
 
 function! s:initSwoop(bufList, pattern)
@@ -29,7 +48,7 @@ function! s:initSwoop(bufList, pattern)
     endfor    
     
     " create swoop buffer
-    highlight swoopMatch term=bold ctermbg=magenta guibg=magenta ctermfg=white guifg=white
+    call s:initSwoopConfig()
 	execute ":match swoopMatch /".a:pattern."/"
     call s:createSwoopBuffer(results, orig_ft)
 	execute ":match swoopMatch /".a:pattern."/"
@@ -65,7 +84,7 @@ endfunction
 function! s:exitSwoop()
     if s:swoopRunning()
         silent bdelete! swoopBuf
-        highlight clear swoopMatch
+        call s:restoreConfig()
     endif
 endfunction
 
@@ -94,6 +113,7 @@ function! s:gotoBufferLineKeepFocus(bufname, line)
     execute s:displayWindow." wincmd w"
     execute "buffer ". a:bufname
     execute ":".a:line
+    call Center()
     execute "wincmd p"
 endfunction
 
