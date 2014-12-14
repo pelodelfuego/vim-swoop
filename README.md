@@ -67,5 +67,5 @@ Upcomming feature
 
 Credit
 ------
-Special thanks to (Shingo Fukuyama)[https://github.com/ShingoFukuyama] for his amazing idea whicj has juste been ported to vim.
+Special thanks to [Shingo Fukuyama](https://github.com/ShingoFukuyama) for his amazing idea whicj has juste been ported to vim.
 
