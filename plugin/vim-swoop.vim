@@ -61,7 +61,6 @@ function s:fetchPatternInBuffer(results, buffer, pattern)
         silent execute 'g/' . a:pattern . "/call add(currentBufferResults, join(s:extractLine(),'\t'))"
 
         if !empty(currentBufferResults)
-            call add(a:results, "-------------------------------------------------")
             call add(a:results, bufname('%')) 
             call add(a:results, "-------------------------------------------------")
             call extend(a:results, currentBufferResults)
@@ -78,7 +77,7 @@ function s:createSwoopBuffer(results, fileType)
 
     let s:swoopWindow = bufwinnr(bufname('%'))
     call append(1, a:results)
-    1d
+    "1d
 endfunction
 
 function! s:exitSwoop()
@@ -113,7 +112,6 @@ function! s:gotoBufferLineKeepFocus(bufname, line)
     execute s:displayWindow." wincmd w"
     execute "buffer ". a:bufname
     execute ":".a:line
-    call Center()
     execute "wincmd p"
 endfunction
 
@@ -160,12 +158,25 @@ function! SwoopAllBuffer()
 endfunction
 
 function! SwoopMatchingBuffer()
-    "let pattern = s:findSwoopPattern()
-    "let allBuf = filter(range(1, bufnr('$')), 'buflisted(v:val)') 
+    let allBuf = filter(range(1, bufnr('$')), 'buflisted(v:val)') 
+    let matchingBuf = []
+
+    let bufRegex = input('Target Buffer: ')
+
+    for currentBuffer in allBuf
+        let bufName = bufname(currentBuffer)
+        if match(bufName, bufRegex) >= 0 
+            call add(matchingBuf, currentBuffer) 
+        endif
+    endfor
+
+    let pattern = s:findSwoopPattern()
+    call s:initSwoop(matchingBuf, pattern)
 endfunction
 
 
 noremap <Leader>gc :call SwoopCurrentBuffer()<CR>
+noremap <Leader>gb :call SwoopMatchingBuffer()<CR>
 noremap <Leader>gg :call SwoopAllBuffer()<CR>
 
 
