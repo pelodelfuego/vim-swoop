@@ -17,7 +17,7 @@ As you navigate in the Swoop Buffer, the initial window will display the context
 
 You have 4 choices here:
 * Continue navigation.
-* Select Current Match `\<CR\>`. Exit Swoop and go to the location of current match
+* Select Current Match `<CR>`. Exit Swoop and go to the location of current match
 * Edit Swoop Buffer `:w`. The changes will be repercuted on all files by saving the Swoop Buffer
 * Quit Swoop `:q`. Exiting Swoop will bring you back to the initial buffer and position.
 
