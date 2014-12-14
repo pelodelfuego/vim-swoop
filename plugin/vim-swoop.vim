@@ -76,7 +76,6 @@ function s:createSwoopBuffer(results, fileType)
 
     let s:swoopWindow = bufwinnr(bufname('%'))
     call append(1, a:results)
-    "1d
 endfunction
 
 function! s:exitSwoop()
