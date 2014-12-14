@@ -1,6 +1,5 @@
 " TODO LIST
 " Visual Mode
-" Matching buffer swoop
 " Incremental Swoop
 " Add CI to match pattern
 
