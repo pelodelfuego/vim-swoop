@@ -1,36 +1,71 @@
 vim swoop
 =========
 
-Vim swoop is directly inspired from helm-swoop we can find in emacs.
-It allow you to grep (multi buffer) and replace occurence while seeing the context of occurences.
-On top of that, you can edit the swoop buffer and all changed occurences will be repercuted on origin files
+Vim swoop is directly inspired from [helm-swoop](https://github.com/ShingoFukuyama/helm-swoop) we can find as emacs' plugin.
+
+It allow you to grep and replace occurence while seeing the context of occurences.
+You can edit the swoop buffer and all changed occurences will be repercuted on origin files
 
 Especially useful to refactor a name in multiple files and keep control on it.
 
 
-How To
+Usage
+-----
+
+Once you start swoop, you will be prompted for a pattern. Then a split scren contains the Swoop Buffer which contains all matched occurences.
+As you navigate in the Swoop Buffer, the initial window will display the context of the match under the cursor.
+
+You have 4 choices here:
+* Continue navigation.
+* Select Current Match (\<CR\>). Exit Swoop and go to the location of current match
+* Edit Swoop Buffer (:w). The changes will be repercuted on all files by saving the Swoop Buffer
+* Quit Swoop (:q). Exiting Swoop will bring you back to the initial buffer and position.
+
+
+Commands
+--------
+
+* Swoop Current Buffer
+```
+noremap <Leader>gc :call SwoopCurrentBuffer()
+```
+
+* Swoop All Buffers
+```
+noremap <Leader>gg :call SwoopAllBuffer()
+```
+
+* Swoop Matching Buffers
+```
+noremap <Leader>gb :call SwoopMatchingBuffer()
+```
+You 'll be prompt for a regex to find which Buffers you want to search in.
+
+
+Installation and dependancies
+-----------------------------
+
+Vim-Swoop is a pure vimscript plugin
+
+### Pathogen (https://github.com/tpope/vim-pathogen)
+```
+git clone https://github.com/pelodelfuego/vim-swoop ~/.vim/bundle/vim-swoop
+```
+
+
+Known Bug and Issues
+--------------------
+
+* Swoop pattern highlight is case sentitive (the results are not)
+
+
+Upcomming feature
+-----------------
+* Incremental Swoop
+* Swoop Current selection
+
+
+Credit
 ------
-* Grep searched pattern in buffer
-* A Temp Buffer will appear in a new window (The swoop Window)
-* You can navigate with the swoop window and the display window will show the context
-
-2 options here:
-* Quit - (:q) to stop swoop and return at initial position
-* Modify and save - (:w) wil replace all changed in the swoop buffer in the corresponding lines and files
-
-
-
-Commnands
----------
-* SwoopAllBuffer(pattern)  \<Leader\>gg
-Will seek for the pattern in all buffers
-
-* SwoopCurrentBuffer(pattern)  \<Leaded\>gc
-Will seek in current buffer
-
-
-
-Advertisement
--------------
-This is under developpement and will be improved. It's just a poc (an useful one), please feel free to contribute if you think it worth it.
+Special thanks to (Shingo Fukuyama)[https://github.com/ShingoFukuyama] for his amazing idea whicj has juste been ported to vim.
 
