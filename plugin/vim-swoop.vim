@@ -1,187 +1,309 @@
-" TODO LIST
-" Visual Mode
-" Incremental Swoop
-" Add CI to match pattern
 
-function! s:extractLine()
-    return [bufnr('%'), line('.'), getline('.')]
-endfunction
+let s:regexMode = 1
+let s:swoopSeparator = "\t"
 
-function s:swoopRunning()
-    return buflisted('swoopBuf') 
-endfunction
+let s:multiSwoop = -1
 
-function s:initSwoopConfig()
-    highlight swoopMatch term=bold ctermbg=magenta guibg=magenta ctermfg=white guifg=white
-    
-    redir => s:initCursorLine
-    silent execute 'highlight CursorLine'
-    redir END
-    highlight CursorLine term=bold ctermbg=yellow guibg=yellow 
+function! s:initSwoop()
+    let s:beforeSwoopBuf = bufnr('%')
+    let s:beforeSwoopPos =  getpos('.')
+    let fileType = &ft
 
-    let s:initScrollOff = &g:scrolloff
-    set scrolloff=1000
-endfunction
+    let s:displayWin = bufwinnr('%')
 
-function s:restoreConfig()
-    highlight clear swoopMatch
-    execute 'highlight CursorLine'.split(s:initCursorLine, 'xxx')[1]
-
-    execute "set scrolloff=".s:initScrollOff
-endfunction
-
-function! s:initSwoop(bufList, pattern)
-    if s:swoopRunning()
-        echo 'Swoop instance already Loaded'
-        return
-    endif
-
-    let s:beforeSwoopCurPos = getpos('.')
-    let s:beforeSwoopBuffer = bufname('%')
-    let orig_ft = &ft
-    let results = []
-    
-    " fetch results in buffer list
-    for currentBuffer in a:bufList
-        call s:fetchPatternInBuffer(results, currentBuffer, a:pattern)
-    endfor    
-    
-    " create swoop buffer
-    call s:initSwoopConfig()
-	execute ":match swoopMatch /".a:pattern."/"
-    call s:createSwoopBuffer(results, orig_ft)
-	execute ":match swoopMatch /".a:pattern."/"
-    
-endfunction
-
-function s:fetchPatternInBuffer(results, buffer, pattern)
-    execute "buffer ". a:buffer
-    let currentBufferResults = []
-        silent execute 'g/' . a:pattern . "/call add(currentBufferResults, join(s:extractLine(),'\t'))"
-
-        if !empty(currentBufferResults)
-            call add(a:results, bufname('%')) 
-            call add(a:results, "-------------------------------------------------")
-            call extend(a:results, currentBufferResults)
-            call add(a:results, "") 
-        endif
-endfunction
-
-function s:createSwoopBuffer(results, fileType)
-    let s:displayWindow = bufwinnr(bufname('%'))
-    
     silent bot split swoopBuf
-    execute "setlocal filetype=".a:fileType
-    noremap <buffer> <silent> <CR> :call SwoopSelect()<CR>
+    execute "setlocal filetype=".fileType
+    let s:swoopBuf = bufnr('%')
 
-    let s:swoopWindow = bufwinnr(bufname('%'))
-    call append(1, a:results)
+    highlight SwoopBufferLineHi term=bold ctermbg=lightgreen guibg=lightgreen 
+    highlight SwoopPatternHi term=bold ctermbg=lightblue guibg=lightblue 
+
+    imap <buffer> <silent> <CR> <Esc>
+    nmap <buffer> <silent> <CR> :call SwoopSelect()<CR>
+    
 endfunction
 
 function! s:exitSwoop()
-    if s:swoopRunning()
-        silent bdelete! swoopBuf
-        call s:restoreConfig()
+    silent bdelete! swoopBuf
+    
+    let s:multiSwoop = -1
+endfunction
+
+
+
+
+function! Swoop()
+    if s:multiSwoop == 0
+        call setline(1, "")
     endif
-endfunction
-
-function s:swoopQuit()
-    call s:exitSwoop()
-"    execute s:displayWindow." wincmd w"
-""    execute "buffer ". s:beforeSwoopBuffer
-""    call setpos('.', s:beforeSwoopCurPos)
-endfunction
-
-function SwoopSelect()
-    let swoopLine = split(getline('.'), '\t')
-    call s:exitSwoop()
-    if len(swoopLine) >= 3
-        execute "buffer ". swoopLine[0]
-        execute ":".swoopLine[1]
+    if s:multiSwoop == -1
+        let s:multiSwoop = 0
+        call s:initSwoop()
     endif
+    if s:multiSwoop == 1
+        let s:multiSwoop = 0
+        let pattern = getline(2)
+        call setline(1, pattern)
+    endif
+
+    execute ':1'
+    startinsert
 endfunction
 
-function! s:swoopSave ()
-    execute "g/.*/call s:replaceSwoopLine(getline('.'))"
+function! SwoopMulti()
+    if s:multiSwoop == 1
+        call setline(2, "")
+        execute ":2"
+    endif
+    if s:multiSwoop == -1
+        let s:multiSwoop = 1
+        call s:initSwoop()
+        call append(1, [""])
+        execute ":2"
+    endif
+    if s:multiSwoop == 0
+        let s:multiSwoop = 1
+        let pattern = getline(1)
+        call setline(1, "")
+        call append(1, [pattern])
+        execute ':1'
+    endif
+
+    startinsert
+endfunction
+
+function! SwoopQuit()
+    call s:exitSwoop()
+
+    execute s:displayWin." wincmd w"
+    execute "buffer ". s:beforeSwoopBuf
+    call setpos('.', s:beforeSwoopPos)
+endfunction
+
+function! SwoopSave()
+    execute "g/.*/call s:setSwoopLine(s:getCurrentLineSwoopInfo())"
     execute ":1"
 endfunction
 
-function! s:gotoBufferLineKeepFocus(bufname, line)
-    execute s:displayWindow." wincmd w"
-    execute "buffer ". a:bufname
-    execute ":".a:line
-    execute "wincmd p"
+function! SwoopSelect()
+    if s:multiSwoop == 0
+        if line('.') > 2
+            call s:selectSwoopInfo()  
+        else
+            normal j
+        endif
+    else
+        if line('.') > 3 
+            call s:selectSwoopInfo()  
+        else
+            normal j
+        endif
+    endif
+    normal zz
 endfunction
 
-function! s:moveSwoopCursor()
-    let swoopResultLine = split(getline('.'), '\t')
-    if len(swoopResultLine) >= 3
-        let bufname = swoopResultLine[0]
-        let line = swoopResultLine[1]
-        call s:gotoBufferLineKeepFocus(bufname, line)
+
+
+
+function! s:cursorMoved()
+    let beforeCursorMoved = getpos('.')
+    let currentLine = beforeCursorMoved[1]
+
+    if s:multiSwoop == 0
+        if currentLine == 1
+            call s:displaySwoopResult(beforeCursorMoved)
+        else
+            call s:displayCurrentContext()
+        endif
+    else
+        if currentLine == 1
+            call s:displaySwoopBuffer(beforeCursorMoved)
+        else
+            if currentLine == 2
+                call s:displaySwoopResult(beforeCursorMoved)
+            else
+                call s:displayCurrentContext()
+            endif
+        endif
+    endif
+    call s:displayHighlight()
+endfunction
+
+
+
+
+
+
+
+
+
+
+function! s:displaySwoopResult(beforeCursorMoved)
+    let pattern = s:getSwoopPattern()
+    let bufferList = s:getSwoopBufList() 
+
+    let results = s:getSwoopResultsLine(bufferList, pattern)
+    exec "buffer ". s:swoopBuf
+    if s:multiSwoop == 0
+        silent! exec "2,$d"
+        call append(1, results)
+    else
+        silent! exec "3,$d"
+        call append(2, results)
+    endif
+    call setpos('.', a:beforeCursorMoved)
+endfunction
+
+function! s:displaySwoopBuffer(beforeCursorMoved)
+    exec "buffer ". s:swoopBuf
+    silent! exec "3,$d"
+    call append(2, s:getSwoopBufList())
+    call setpos('.', a:beforeCursorMoved)
+endfunction
+
+
+function! s:displayCurrentContext()
+    let swoopInfo = s:getCurrentLineSwoopInfo()
+    if len(swoopInfo) >= 3
+        let bufname = swoopInfo[0]
+        let lineNumber = swoopInfo[1]
+        let pattern = s:getSwoopPattern()
+
+        exec s:displayWin." wincmd w"
+        exec "buffer ". bufname
+        let currentFileType = &ft
+        exec ":".lineNumber
+        normal zz
+        
+        "exec \":filetype detect"
+        execute "wincmd p"
+        "exec \":filetype detect"
+
     endif
 endfunction
 
-function! s:replaceSwoopLine(swoopLine)
-    let swoopResultLine = split(a:swoopLine, '\t')
-    let swoopBuffer = bufname('%')
-    if len(swoopResultLine) >= 3
-        let bufTarget = swoopResultLine[0]
-        let lineTarget = swoopResultLine[1]
-        let newLine = join(swoopResultLine[2:], '\t')
+function! s:displayHighlight()
+    let pattern = s:getSwoopPattern()
+
+    call clearmatches()
+    call matchadd("SwoopPatternHi", pattern)
+
+    exec s:displayWin." wincmd w"
+    call clearmatches()
+    call matchadd("SwoopPatternHi", pattern)
+    execute "wincmd p"
+
+    call matchaddpos("SwoopBufferLineHi", s:bufferLineList)
+
+endfunction
+
+
+
+
+
+
+
+
+function! s:extractCurrentLineSwoopInfo()
+    return join([bufnr('%'), line('.'), getline('.')], s:swoopSeparator)
+endfunction
+
+function! s:getCurrentLineSwoopInfo()
+    return split(getline('.'), s:swoopSeparator)
+endfunction
+
+function! s:getSwoopResultsLine(bufferList, pattern)
+    let results = []
+    let s:bufferLineList = s:multiSwoop == 1 ? [1] : [] 
+    for currentBuffer in a:bufferList
+        execute "buffer ". currentBuffer 
+        let currentBufferResults = [] 
+        execute 'g/' . a:pattern . "/call add(currentBufferResults, s:extractCurrentLineSwoopInfo())" 
+        if !empty(currentBufferResults)
+            call add(results, bufname('%'))
+            call add(s:bufferLineList, len(results) + 1 + s:multiSwoop)
+            call extend(results, currentBufferResults)
+            call add(results, "") 
+        endif
+    endfor
+    return  results
+endfunction
+
+
+
+
+function! s:getSwoopPattern()
+    if s:multiSwoop == 0
+        let patternLine = getline(1)
+    else
+        let patternLine = getline(2)
+    endif
+
+    if s:regexMode == 1
+        return join(split(patternLine), '.*')
+    else
+        return patternLine
+    endif
+endfunction
+
+function! s:getSwoopBufList()
+    if s:multiSwoop == 0
+        let bufList = [s:beforeSwoopBuf]
+    else
+        let bufList = s:getAllBuffer() 
+    endif
+
+    return bufList
+endfunction
+
+function! s:getAllBuffer()
+    let allBuf = filter(range(1, bufnr('$')), 'buflisted(v:val)') 
+    let swoopIndex = index(allBuf, s:swoopBuf)
+    call remove(allBuf, swoopIndex)
+    return allBuf
+endfunction
+
+
+
+
+
+function! s:setSwoopLine(swoopInfo)
+    if len(a:swoopInfo) >= 3
+        let bufTarget = a:swoopInfo[0]
+        let lineTarget = a:swoopInfo[1]
+        let newLine = join(a:swoopInfo[2:], s:swoopSeparator)
 
         execute "buffer ". bufTarget
         let oldLine = getline(lineTarget)
+
         if oldLine != newLine
             call setline(lineTarget, newLine)
         endif
+
     endif
-    execute "buffer ". swoopBuffer
-endfunction
-
-function! s:findSwoopPattern()
-    let pattern = input('Swoop: ')
-    return pattern
-endfunction
-
-function! SwoopCurrentBuffer()
-    let pattern = s:findSwoopPattern() 
-    call s:initSwoop([bufnr('%')], pattern)
-endfunction
-
-function! SwoopAllBuffer()
-    let pattern = s:findSwoopPattern()
-    let allBuf = filter(range(1, bufnr('$')), 'buflisted(v:val)') 
-    call s:initSwoop(allBuf, pattern)
-endfunction
-
-function! SwoopMatchingBuffer()
-    let allBuf = filter(range(1, bufnr('$')), 'buflisted(v:val)') 
-    let matchingBuf = []
-
-    let bufRegex = input('Target Buffer: ')
-
-    for currentBuffer in allBuf
-        let bufName = bufname(currentBuffer)
-        if match(bufName, bufRegex) >= 0 
-            call add(matchingBuf, currentBuffer) 
-        endif
-    endfor
-
-    let pattern = s:findSwoopPattern()
-    call s:initSwoop(matchingBuf, pattern)
+    execute "buffer ". s:swoopBuf
 endfunction
 
 
-noremap <Leader>gc :call SwoopCurrentBuffer()<CR>
-noremap <Leader>gb :call SwoopMatchingBuffer()<CR>
-noremap <Leader>gg :call SwoopAllBuffer()<CR>
+function! s:selectSwoopInfo()
+    let swoopInfo = s:getCurrentLineSwoopInfo()
+    call s:exitSwoop()
 
+    if len(swoopInfo) >= 3
+        execute "buffer ". swoopInfo[0]
+        execute ":".swoopInfo[1]
+    endif
+endfunction
+
+
+
+nmap <Leader>l :call Swoop()<CR>
+nmap <Leader>ml :call SwoopMulti()<CR>
 
 augroup swoopAutoCmd
-    autocmd!  CursorMoved    swoopBuf      :call s:moveSwoopCursor()
+    autocmd!    CursorMovedI   swoopBuf   :call   s:cursorMoved()
+    autocmd!    CursorMoved    swoopBuf    :call   s:cursorMoved()
 
-    autocmd!  BufUnload    swoopBuf      :call s:swoopQuit()
-    autocmd!  BufLeave    swoopBuf      :call s:swoopQuit()
-    autocmd!  BufWriteCmd    swoopBuf      :call s:swoopSave()
+    autocmd!    BufWrite    swoopBuf    :call   SwoopSave()
+    autocmd!    BufLeave   swoopBuf   :call    SwoopQuit() 
 augroup END
