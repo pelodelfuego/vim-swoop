@@ -87,9 +87,9 @@ endfunction
 
 function s:swoopQuit()
     call s:exitSwoop()
-    execute s:displayWindow." wincmd w"
-    execute "buffer ". s:beforeSwoopBuffer
-    call setpos('.', s:beforeSwoopCurPos)
+"    execute s:displayWindow." wincmd w"
+""    execute "buffer ". s:beforeSwoopBuffer
+""    call setpos('.', s:beforeSwoopCurPos)
 endfunction
 
 function SwoopSelect()
