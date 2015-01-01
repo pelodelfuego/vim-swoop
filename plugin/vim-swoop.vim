@@ -159,7 +159,10 @@ function! s:displaySwoopBuffer(beforeCursorMoved)
     exec "buffer ". s:swoopBuf
     silent! exec "3,$d"
 
-    call append(3, s:getSwoopBufList())
+    let swoopBufList = s:getSwoopBufList()
+    let swoopBufStrList = map(copy(swoopBufList), 's:getBufferStr(v:val)') 
+
+    call append(2, swoopBufStrList) 
     call setpos('.', a:beforeCursorMoved)
 endfunction
 
@@ -214,6 +217,10 @@ function! s:getCurrentLineSwoopInfo()
     return split(getline('.'), s:swoopSeparator)
 endfunction
 
+function! s:getBufferStr(bufNr)
+    return join([a:bufNr, bufname(a:bufNr)], s:swoopSeparator)
+endfunction
+
 function! s:getSwoopResultsLine(bufferList, pattern)
     let results = []
     let s:bufferLineList = s:multiSwoop == 1 ? [1] : [] 
@@ -241,11 +248,7 @@ function! s:getSwoopPattern()
         let patternLine = getline(2)
     endif
 
-    if s:regexMode == 1
-        return join(split(patternLine), '.*')
-    else
-        return patternLine
-    endif
+    return s:regexMode == 1 ? join(split(patternLine), '.*')  : patternLine
 endfunction
 
 function! s:getSwoopBufList()
@@ -253,26 +256,10 @@ function! s:getSwoopBufList()
         let bufList = [s:beforeSwoopBuf]
     else
         let bufList = s:getAllBuffer()
-        
-"        let patternLine = getline(1)
-""        echoerr patternLine
-""        let bufPattern = join(split(patternLine, '.*'))
-""        echoerr len(bufPattern)
-""        echoerr bufPattern
-""        
-""        let bufListName = map(copy(bufList), 'bufname(v:val)')
-""        if !empty(patternLine) 
-"            let bufListNameFiltered = filter(bufListName, 'match(v:val, \"'.bufPattern.'") != 0')
-"            echo 'match(v:val, '.bufPattern.') != 0'
-""            sleep 1
-""
-""            echo bufListNameFiltered
-""            for bufCur in bufListNameFiltered
-""                "echoerr bufCur
-""            endfor
-""        endif
-    endif
+        let bufPattern =  s:regexMode == 1 ? join(split(getline(1)), '.*') : getline(1)
 
+        call filter(bufList, 's:getBufferStr(v:val) =~? bufPattern')
+    endif
     return bufList
 endfunction
 
