@@ -25,7 +25,7 @@ endfunction
 
 function! s:exitSwoop()
     silent bdelete! swoopBuf
-    
+    call clearmatches()    
     let s:multiSwoop = -1
 endfunction
 
@@ -118,6 +118,7 @@ function! s:cursorMoved()
     else
         if currentLine == 1
             call s:displaySwoopBuffer(beforeCursorMoved)
+            let s:bufferLineList = [1]
         else
             if currentLine == 2
                 call s:displaySwoopResult(beforeCursorMoved)
@@ -157,7 +158,8 @@ endfunction
 function! s:displaySwoopBuffer(beforeCursorMoved)
     exec "buffer ". s:swoopBuf
     silent! exec "3,$d"
-    call append(2, s:getSwoopBufList())
+
+    call append(3, s:getSwoopBufList())
     call setpos('.', a:beforeCursorMoved)
 endfunction
 
@@ -250,7 +252,25 @@ function! s:getSwoopBufList()
     if s:multiSwoop == 0
         let bufList = [s:beforeSwoopBuf]
     else
-        let bufList = s:getAllBuffer() 
+        let bufList = s:getAllBuffer()
+        
+"        let patternLine = getline(1)
+""        echoerr patternLine
+""        let bufPattern = join(split(patternLine, '.*'))
+""        echoerr len(bufPattern)
+""        echoerr bufPattern
+""        
+""        let bufListName = map(copy(bufList), 'bufname(v:val)')
+""        if !empty(patternLine) 
+"            let bufListNameFiltered = filter(bufListName, 'match(v:val, \"'.bufPattern.'") != 0')
+"            echo 'match(v:val, '.bufPattern.') != 0'
+""            sleep 1
+""
+""            echo bufListNameFiltered
+""            for bufCur in bufListNameFiltered
+""                "echoerr bufCur
+""            endfor
+""        endif
     endif
 
     return bufList
