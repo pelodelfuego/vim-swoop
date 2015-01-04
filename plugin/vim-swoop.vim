@@ -75,6 +75,7 @@ endfunction
 function! SwoopQuit()
     call s:exitSwoop()
 
+    call clearmatches()
     execute s:displayWin." wincmd w"
     execute "buffer ". s:beforeSwoopBuf
     call setpos('.', s:beforeSwoopPos)
@@ -180,9 +181,7 @@ function! s:displayCurrentContext()
         exec ":".lineNumber
         normal zz
         
-        "exec \":filetype detect"
         execute "wincmd p"
-        "exec \":filetype detect"
 
     endif
 endfunction
@@ -246,6 +245,12 @@ function! s:getSwoopPattern()
         let patternLine = getline(1)
     else
         let patternLine = getline(2)
+    endif
+
+    if empty(patternLine)
+        return ''
+    else
+        let patternLine = patternLine.'\c'
     endif
 
     return s:regexMode == 1 ? join(split(patternLine), '.*')  : patternLine
