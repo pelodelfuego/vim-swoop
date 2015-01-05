@@ -33,15 +33,23 @@ From the swoop buffer, you can:
 * Toggle single and multi buffer mode
 
 ###single buffer mode
+Start in insert mode, first line contains the search pattern.
 
-**SCREENSHOT**
+As you type the pattern, result will interactivly be displyed bellow.
+
+![](https://raw.githubusercontent.com/pelodelfuego/vim-swoop/dev/doc/images/singleModeScreenshot.png)
 
 
 ###multi buffer mode
+Start in insert mode, first line contains the buffer pattern, no pattern means all buffers.
 
-**SCREENSHOT**
+Buffer will be displayed interactivly bellow
 
+![](https://raw.githubusercontent.com/pelodelfuego/vim-swoop/dev/doc/images/multiModeBufferPatternScreenshot.png)
 
+Second line contains the search pattern just like in single buffer mode
+
+![](https://raw.githubusercontent.com/pelodelfuego/vim-swoop/dev/doc/images/multiModeSwoopPatternScreenshot.png)
 
 Commands and Configuration
 --------
