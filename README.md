@@ -35,7 +35,7 @@ From the swoop buffer, you can:
 ###single buffer mode
 Start in insert mode, first line contains the search pattern.
 
-As you type the pattern, result will interactivly be displyed bellow.
+As you type the pattern, results will interactivly be displayed bellow.
 
 ![](https://raw.githubusercontent.com/pelodelfuego/vim-swoop/dev/doc/images/singleModeScreenshot.png)
 
