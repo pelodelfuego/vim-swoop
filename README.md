@@ -69,7 +69,7 @@ nmap <Leader>ml :call SwoopMulti()<CR>
 
 * Disable quick regex mode
 
-    By default (1), typing \<Space\> in the search pattern is replace by ".*". You can get classic mode by
+    By default, typing \<Space\> in the search pattern is replace by ".*". You can get classic mode by:
 ```
 let s:regexMode = 0 
 ```
