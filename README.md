@@ -112,8 +112,9 @@ git clone https://github.com/pelodelfuego/vim-swoop ~/.vim/bundle/vim-swoop
 ```
 
 
-Upcomming feature
+Upcomming feature and improvement
 -----------------
+* Display empty buffer in display window when no context available (ie pattern or buffer name)
 * Swoop Current selection
 
 
