@@ -56,17 +56,23 @@ Commands and Configuration
 
 ###Commands
 * Swoop current Buffer
-        nmap <Leader>l :call Swoop()<CR>
+```
+nmap <Leader>l :call Swoop()<CR>
+```
 
 * Swoop multi Buffers
-        nmap <Leader>ml :call SwoopMulti()<CR>
+```
+nmap <Leader>ml :call SwoopMulti()<CR>
+```
 
 ###Configuration
 
 * Disable quick regex mode
 
     By default, typing \<Space\> in the search pattern is replace by ".*".
-        let s:regexMode = 1
+```
+let s:regexMode = 1
+```
 
 Tips and Tricks
 ---------------
