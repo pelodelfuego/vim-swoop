@@ -10,6 +10,7 @@ An animation means more than a boring speech...
 
 ![](https://github.com/pelodelfuego/vim-swoop/blob/dev/doc/images/moveSwoop.gif)
 
+You can edit the swoopBuffer and the changes you applied will be save for all corresponding files by saving the buffer
 
 Especially useful to refactor a name in multiple files and keep control on it...
 
