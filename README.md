@@ -8,7 +8,7 @@ It allows you to find and replace occurences in many buffers being aware of the 
 An animation means more than a boring speech...
 
 
-**UPCOMMING GIF**
+![](https://github.com/pelodelfuego/vim-swoop/blob/dev/doc/images/moveSwoop.gif)
 
 
 Especially useful to refactor a name in multiple files and keep control on it...
