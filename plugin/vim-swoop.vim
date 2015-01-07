@@ -75,9 +75,9 @@ endfunction
 function! SwoopQuit()
     call s:exitSwoop()
 
-    call clearmatches()
     execute s:displayWin." wincmd w"
     execute "buffer ". s:beforeSwoopBuf
+    call clearmatches()
     call setpos('.', s:beforeSwoopPos)
 endfunction
 
