@@ -3,69 +3,125 @@ vim swoop
 
 Vim swoop is directly inspired from [helm-swoop](https://github.com/ShingoFukuyama/helm-swoop) we can find as emacs' plugin.
 
-It allow you to grep and replace occurence while seeing the context of occurences.
-You can edit the swoop buffer and all changed occurences will be repercuted on origin files
+It allows you to find and replace occurences in many buffers being aware of the context.
 
-Especially useful to refactor a name in multiple files and keep control on it.
+An animation means more than a boring speech...
+
+
+**UPCOMMING GIF**
+
+
+Especially useful to refactor a name in multiple files and keep control on it...
 
 
 Usage
 -----
 
-Once you start swoop, you will be prompted for a pattern. Then a split scren contains the Swoop Buffer which contains all matched occurences.
-As you navigate in the Swoop Buffer, the initial window will display the context of the match under the cursor.
+When you start vim-swoop (multi or single buffer mode) you get 2 windows.
 
-You have 4 choices here:
-* Continue navigation.
-* Select Current Match `<CR>`. Exit Swoop and go to the location of current match
-* Edit Swoop Buffer `:w`. The changes will be repercuted on all files by saving the Swoop Buffer
-* Quit Swoop `:q`. Exiting Swoop will bring you back to the initial buffer and position.
+First one contain context, the other is the swoop buffer. As you move the cursor to a match, the display windows will show the context.
+
+From the swoop buffer, you can:
+* Interactivly edit your search
+* Navigate in results (and context) by moving the cursor
+* Select current result.
+*Exit Swoop and go to the location of current match when you press \<CR\>*
+* Edit and save Swoop Buffer.
+*The changes will be repercuted on all files by saving the Swoop Buffer*
+* Quit Swoop. 
+*Exiting Swoop will bring you back to the initial buffer and position.*
+* Toggle single and multi buffer mode
+
+###single buffer mode
+Start in insert mode, first line contains the search pattern.
+
+As you type the pattern, results will interactivly be displayed bellow.
+
+![](https://raw.githubusercontent.com/pelodelfuego/vim-swoop/dev/doc/images/singleModeScreenshot.png)
 
 
-Commands
+###multi buffer mode
+Start in insert mode, first line contains the buffer pattern, no pattern means all buffers.
+
+Buffer will be displayed interactivly bellow
+
+![](https://raw.githubusercontent.com/pelodelfuego/vim-swoop/dev/doc/images/multiModeBufferPatternScreenshot.png)
+
+Second line contains the search pattern just like in single buffer mode
+
+![](https://raw.githubusercontent.com/pelodelfuego/vim-swoop/dev/doc/images/multiModeSwoopPatternScreenshot.png)
+
+Commands and Configuration
 --------
 
-* Swoop Current Buffer
+###Commands
+* Swoop current Buffer
 ```
-noremap <Leader>gc :call SwoopCurrentBuffer()
-```
-
-* Swoop All Buffers
-```
-noremap <Leader>gg :call SwoopAllBuffer()
+nmap <Leader>l :call Swoop()<CR>
 ```
 
-* Swoop Matching Buffers
+* Swoop multi Buffers
 ```
-noremap <Leader>gb :call SwoopMatchingBuffer()
+nmap <Leader>ml :call SwoopMulti()<CR>
 ```
-You 'll be prompt for a regex to find which Buffers you want to search in.
 
+###Configuration
+
+* Disable quick regex mode
+
+    By default, typing \<Space\> in the search pattern is replaced by ".*". You can get classic mode by:
+```
+let s:regexMode = 0 
+```
+
+Tips and Tricks
+---------------
+* Use CursorLine
+
+    I strongly advise to highlight current line. It will help you to keep focus on the context of the current match.
+
+* FileType and Session
+    
+    If you use [Vim-session](https://github.com/xolox/vim-session), be aware that it doesn't keep buffer filetype in memory.
+
+    I'm working on this issue.
+
+* Toggle mode
+
+    You can toggle single and multi buffer mode, your Pattern will stay the same.
+
+    Calling again a mode while your already in will reset the search pattern.
+
+* Search in swoop buffer
+
+    Since the context display depends of the cursor movement, you can lauch a search inside the search buffer
+
+* Use last search 
+
+    When you start swoop (either the mode) and don't enter any pattern, search result will be your last search.
 
 Installation and dependancies
 -----------------------------
 
-Vim-Swoop is a pure vimscript plugin
+Vim-Swoop is a pure vimscript plugin, no other dependancies.
 
-### Pathogen (https://github.com/tpope/vim-pathogen)
+
+#### [Pathogen](https://github.com/tpope/vim-pathogen)
 ```
 git clone https://github.com/pelodelfuego/vim-swoop ~/.vim/bundle/vim-swoop
 ```
 
 
-Known Bug and Issues
---------------------
-
-* Swoop pattern highlight is case sentitive (the results are not)
-
-
-Upcomming feature
+Upcomming feature and improvement
 -----------------
-* Incremental Swoop
+* Display empty buffer in display window when no context available (ie pattern or buffer name)
 * Swoop Current selection
+* Improve swoop Colors in console
+* Option to choose display windows place
+* SmartCase search
 
 
 Credit
 ------
-Special thanks to [Shingo Fukuyama](https://github.com/ShingoFukuyama) for his amazing idea which has juste been ported to vim.
+Special thanks to [ Shingo Fukuyama ]( https://github.com/ShingoFukuyama ) for his amazing idea which has juste been ported to vim.
 
