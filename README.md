@@ -29,7 +29,7 @@ From the swoop buffer, you can:
 *Exit Swoop and go to the location of current match when you press \<CR\>*
 * Edit and save Swoop Buffer.
 *The changes will be repercuted on all files by saving the Swoop Buffer*
-* Quit Swoop. 
+* Quit Swoop.
 *Exiting Swoop will bring you back to the initial buffer and position.*
 * Toggle single and multi buffer mode
 
@@ -95,23 +95,16 @@ SwoopMultiPattern(searchPattern, bufPattern)
 
     By default, typing \<Space\> in the search pattern is replaced by ".*". You can get classic mode by:
 ```
-let s:regexMode = 0 
+let s:regexMode = 0
 ```
 
 * Disable auto insert mode
 
     By default, you will start in insert mode, you can disable it by:
 ```
-let s:autoInserMode = 0 
+let s:autoInserMode = 0
 ```
 
-* Edit color theme
-
-    Maybe your colorscheme won't be relevant with Swoop default highlight, by default the config is:
-```
-highlight SwoopBufferLineHi term=bold ctermfg=lightgreen guibg=lightgreen 
-highlight SwoopPatternHi term=bold ctermfg=lightblue guibg=lightblue 
-```
 
 Tips and Tricks
 ---------------
@@ -120,7 +113,7 @@ Tips and Tricks
     I strongly advise to highlight current line. It will help you to keep focus on the context of the current match.
 
 * FileType and Session
-    
+
     If you use [Vim-session](https://github.com/xolox/vim-session), be aware that it doesn't keep buffer filetype in memory.
 
     I'm working on this issue.
@@ -135,7 +128,7 @@ Tips and Tricks
 
     Since the context display depends of the cursor movement, you can lauch a search inside the search buffer
 
-* Use last search 
+* Use last search
 
     When you start swoop (either the mode) and don't enter any pattern, search result will be your last search.
 
