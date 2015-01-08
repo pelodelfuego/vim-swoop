@@ -18,9 +18,8 @@
 
 
 "   CONFIGURATION AND VARIABLES
-let s:autoInsertMode = 0
+let s:autoInsertMode = 1
 let s:regexMode = 1
-
 
 let s:swoopSeparator = "\t"
 let s:multiSwoop = -1
