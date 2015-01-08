@@ -75,6 +75,12 @@ nmap <Leader>ml :call SwoopMulti()<CR>
 let s:regexMode = 0 
 ```
 
+* Disable auto insert mode
+
+    By default, you will start in insert mode, you can disable it by:
+```
+let s:autoInserMode = 0 
+```
 Tips and Tricks
 ---------------
 * Use CursorLine
@@ -117,7 +123,6 @@ Upcomming feature and improvement
 -----------------
 * Display empty buffer in display window when no context available (ie pattern or buffer name)
 * Swoop Current selection
-* Improve swoop Colors in console
 * Option to choose display windows place
 * SmartCase search
 
