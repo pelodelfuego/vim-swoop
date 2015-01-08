@@ -38,17 +38,26 @@ function! s:initSwoop()
     execute "setlocal filetype=".fileType
     let s:swoopBuf = bufnr('%')
 
-    highlight SwoopBufferLineHi term=bold ctermfg=lightgreen guibg=lightgreen 
-    highlight SwoopPatternHi term=bold ctermfg=lightblue guibg=lightblue 
+    redir => backgroundColor
+    silent set background?
+    redir END
+    let backgroundColor = split(backgroundColor, '=')[1]
+    if backgroundColor == 'dark'
+        highlight SwoopBufferLineHi term=bold ctermfg=lightgreen gui=bold guifg=lightgreen
+        highlight SwoopPatternHi term=bold ctermfg=lightblue gui=bold guifg=lightblue
+    else
+        highlight SwoopBufferLineHi term=bold ctermfg=lightgreen guibg=lightgreen
+        highlight SwoopPatternHi term=bold ctermfg=lightblue guibg=lightblue
+    endif
 
     imap <buffer> <silent> <CR> <Esc>
     nmap <buffer> <silent> <CR> :call SwoopSelect()<CR>
-    
+
 endfunction
 
 function! s:exitSwoop()
     silent bdelete! swoopBuf
-    call clearmatches()    
+    call clearmatches()
     let s:multiSwoop = -1
 endfunction
 
@@ -129,13 +138,13 @@ endfunction
 function! SwoopSelect()
     if s:multiSwoop == 0
         if line('.') > 2
-            call s:selectSwoopInfo()  
+            call s:selectSwoopInfo()
         else
             normal j
         endif
     else
-        if line('.') > 3 
-            call s:selectSwoopInfo()  
+        if line('.') > 3
+            call s:selectSwoopInfo()
         else
             normal j
         endif
@@ -186,7 +195,7 @@ endfunction
 "   DISPLAY
 function! s:displaySwoopResult(beforeCursorMoved)
     let pattern = s:getSwoopPattern()
-    let bufferList = s:getSwoopBufList() 
+    let bufferList = s:getSwoopBufList()
 
     let results = s:getSwoopResultsLine(bufferList, pattern)
     exec "buffer ". s:swoopBuf
@@ -205,9 +214,9 @@ function! s:displaySwoopBuffer(beforeCursorMoved)
     silent! exec "3,$d"
 
     let swoopBufList = s:getSwoopBufList()
-    let swoopBufStrList = map(copy(swoopBufList), 's:getBufferStr(v:val)') 
+    let swoopBufStrList = map(copy(swoopBufList), 's:getBufferStr(v:val)')
 
-    call append(2, swoopBufStrList) 
+    call append(2, swoopBufStrList)
     call setpos('.', a:beforeCursorMoved)
 endfunction
 
@@ -223,7 +232,7 @@ function! s:displayCurrentContext()
         let currentFileType = &ft
         exec ":".lineNumber
         normal zz
-        
+
         execute "wincmd p"
 
     endif
@@ -231,12 +240,12 @@ endfunction
 
 function! s:displayHighlight()
     let pattern = s:getSwoopPattern()
-    
+
     call clearmatches()
 
     if s:multiSwoop == 1
         if line('.') == 1
-            let bufPattern = s:getBufPattern()                    
+            let bufPattern = s:getBufPattern()
             call matchadd("SwoopBufferLineHi", bufPattern)
         endif
     endif
@@ -273,16 +282,16 @@ endfunction
 
 function! s:getSwoopResultsLine(bufferList, pattern)
     let results = []
-    let s:bufferLineList = s:multiSwoop == 1 ? [1] : [] 
+    let s:bufferLineList = s:multiSwoop == 1 ? [1] : []
     for currentBuffer in a:bufferList
-        execute "buffer ". currentBuffer 
-        let currentBufferResults = [] 
-        execute 'g/' . a:pattern . "/call add(currentBufferResults, s:extractCurrentLineSwoopInfo())" 
+        execute "buffer ". currentBuffer
+        let currentBufferResults = []
+        execute 'g/' . a:pattern . "/call add(currentBufferResults, s:extractCurrentLineSwoopInfo())"
         if !empty(currentBufferResults)
             call add(results, bufname('%'))
             call add(s:bufferLineList, len(results) + 1 + s:multiSwoop)
             call extend(results, currentBufferResults)
-            call add(results, "") 
+            call add(results, "")
         endif
     endfor
     return  results
@@ -313,14 +322,14 @@ function! s:getSwoopBufList()
         let bufList = [s:beforeSwoopBuf]
     else
         let bufList = s:getAllBuffer()
-        let bufPattern = s:getBufPattern() 
+        let bufPattern = s:getBufPattern()
         call filter(bufList, 's:getBufferStr(v:val) =~? bufPattern')
     endif
     return bufList
 endfunction
 
 function! s:getAllBuffer()
-    let allBuf = filter(range(1, bufnr('$')), 'buflisted(v:val)') 
+    let allBuf = filter(range(1, bufnr('$')), 'buflisted(v:val)')
     let swoopIndex = index(allBuf, s:swoopBuf)
     call remove(allBuf, swoopIndex)
     return allBuf
@@ -365,5 +374,5 @@ augroup swoopAutoCmd
     autocmd!    CursorMoved    swoopBuf    :call   s:cursorMoved()
 
     autocmd!    BufWrite    swoopBuf    :call   SwoopSave()
-    autocmd!    BufLeave   swoopBuf   :call    SwoopQuit() 
+    autocmd!    BufLeave   swoopBuf   :call    SwoopQuit()
 augroup END
