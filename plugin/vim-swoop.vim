@@ -1,9 +1,33 @@
+"   Vim Swoop   1.0.1
 
+"Copyright (C) 2015 copyright Clément CREPY
+"
+"This program is free software; you can redistribute it and/or modify
+"it under the terms of the GNU General Public License as published by
+"the Free Software Foundation; either version 2 of the License, or
+"(at your option) any later version.
+"
+"This program is distributed in the hope that it will be useful,
+"but WITHOUT ANY WARRANTY; without even the implied warranty of
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+"GNU General Public License for more details.
+"
+"You should have received a copy of the GNU General Public License
+"along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+
+
+"   CONFIGURATION AND VARIABLES
+let s:autoInsertMode = 0
 let s:regexMode = 1
-let s:swoopSeparator = "\t"
 
+
+let s:swoopSeparator = "\t"
 let s:multiSwoop = -1
 
+
+
+"   BEGIN EXIT WORKAROUND
 function! s:initSwoop()
     let s:beforeSwoopBuf = bufnr('%')
     let s:beforeSwoopPos =  getpos('.')
@@ -15,8 +39,8 @@ function! s:initSwoop()
     execute "setlocal filetype=".fileType
     let s:swoopBuf = bufnr('%')
 
-    highlight SwoopBufferLineHi term=bold ctermbg=lightgreen guibg=lightgreen 
-    highlight SwoopPatternHi term=bold ctermbg=lightblue guibg=lightblue 
+    highlight SwoopBufferLineHi term=bold ctermfg=lightgreen guibg=lightgreen 
+    highlight SwoopPatternHi term=bold ctermfg=lightblue guibg=lightblue 
 
     imap <buffer> <silent> <CR> <Esc>
     nmap <buffer> <silent> <CR> :call SwoopSelect()<CR>
@@ -31,7 +55,7 @@ endfunction
 
 
 
-
+"   USER INTERACTION
 function! Swoop()
     if s:multiSwoop == 0
         call setline(1, "")
@@ -47,7 +71,9 @@ function! Swoop()
     endif
 
     execute ':1'
-    startinsert
+    if s:autoInsertMode == 1
+        startinsert
+    endif
 endfunction
 
 function! SwoopMulti()
@@ -69,7 +95,9 @@ function! SwoopMulti()
         execute ':1'
     endif
 
-    startinsert
+    if s:autoInsertMode == 1
+        startinsert
+    endif
 endfunction
 
 function! SwoopQuit()
@@ -105,7 +133,7 @@ endfunction
 
 
 
-
+"   USER HIDDEN INTERACTION
 function! s:cursorMoved()
     let beforeCursorMoved = getpos('.')
     let currentLine = beforeCursorMoved[1]
@@ -131,15 +159,19 @@ function! s:cursorMoved()
     call s:displayHighlight()
 endfunction
 
+function! s:selectSwoopInfo()
+    let swoopInfo = s:getCurrentLineSwoopInfo()
+    call s:exitSwoop()
+
+    if len(swoopInfo) >= 3
+        execute "buffer ". swoopInfo[0]
+        execute ":".swoopInfo[1]
+    endif
+endfunction
 
 
 
-
-
-
-
-
-
+"   DISPLAY
 function! s:displaySwoopResult(beforeCursorMoved)
     let pattern = s:getSwoopPattern()
     let bufferList = s:getSwoopBufList() 
@@ -167,7 +199,6 @@ function! s:displaySwoopBuffer(beforeCursorMoved)
     call setpos('.', a:beforeCursorMoved)
 endfunction
 
-
 function! s:displayCurrentContext()
     let swoopInfo = s:getCurrentLineSwoopInfo()
     if len(swoopInfo) >= 3
@@ -188,8 +219,16 @@ endfunction
 
 function! s:displayHighlight()
     let pattern = s:getSwoopPattern()
-
+    
     call clearmatches()
+
+    if s:multiSwoop == 1
+        if line('.') == 1
+            let bufPattern = s:getBufPattern()                    
+            call matchadd("SwoopBufferLineHi", bufPattern)
+        endif
+    endif
+
     call matchadd("SwoopPatternHi", pattern)
 
     exec s:displayWin." wincmd w"
@@ -203,11 +242,7 @@ endfunction
 
 
 
-
-
-
-
-
+"   ACCESSOR - SINGLE POINT OF ENTRY
 function! s:extractCurrentLineSwoopInfo()
     return join([bufnr('%'), line('.'), getline('.')], s:swoopSeparator)
 endfunction
@@ -237,9 +272,6 @@ function! s:getSwoopResultsLine(bufferList, pattern)
     return  results
 endfunction
 
-
-
-
 function! s:getSwoopPattern()
     if s:multiSwoop == 0
         let patternLine = getline(1)
@@ -256,13 +288,16 @@ function! s:getSwoopPattern()
     return s:regexMode == 1 ? join(split(patternLine), '.*')  : patternLine
 endfunction
 
+function! s:getBufPattern()
+    return s:regexMode == 1 ? join(split(getline(1)), '.*') : getline(1)
+endf
+
 function! s:getSwoopBufList()
     if s:multiSwoop == 0
         let bufList = [s:beforeSwoopBuf]
     else
         let bufList = s:getAllBuffer()
-        let bufPattern =  s:regexMode == 1 ? join(split(getline(1)), '.*') : getline(1)
-
+        let bufPattern = s:getBufPattern() 
         call filter(bufList, 's:getBufferStr(v:val) =~? bufPattern')
     endif
     return bufList
@@ -274,10 +309,6 @@ function! s:getAllBuffer()
     call remove(allBuf, swoopIndex)
     return allBuf
 endfunction
-
-
-
-
 
 function! s:setSwoopLine(swoopInfo)
     if len(a:swoopInfo) >= 3
@@ -297,21 +328,14 @@ function! s:setSwoopLine(swoopInfo)
 endfunction
 
 
-function! s:selectSwoopInfo()
-    let swoopInfo = s:getCurrentLineSwoopInfo()
-    call s:exitSwoop()
 
-    if len(swoopInfo) >= 3
-        execute "buffer ". swoopInfo[0]
-        execute ":".swoopInfo[1]
-    endif
-endfunction
-
-
-
+"   COMMAND
 nmap <Leader>l :call Swoop()<CR>
 nmap <Leader>ml :call SwoopMulti()<CR>
 
+
+
+"   AUTO COMMAND
 augroup swoopAutoCmd
     autocmd!    CursorMovedI   swoopBuf   :call   s:cursorMoved()
     autocmd!    CursorMoved    swoopBuf    :call   s:cursorMoved()
