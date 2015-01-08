@@ -235,7 +235,11 @@ function! s:displayHighlight()
     call matchadd("SwoopPatternHi", pattern)
     execute "wincmd p"
 
-    call matchaddpos("SwoopBufferLineHi", s:bufferLineList)
+    if exists("*matchaddpos") == 0
+        call s:matchBufferLine(s:bufferLineList)
+    else
+        call matchaddpos("SwoopBufferLineHi", s:bufferLineList)
+    endif
 
 endfunction
 
@@ -326,6 +330,14 @@ function! s:setSwoopLine(swoopInfo)
     execute "buffer ". s:swoopBuf
 endfunction
 
+
+
+"   COMPATIBILITY FUNCTION
+function! s:matchBufferLine(bufferLineList)
+    for line in a:bufferLineList
+        call matchadd("SwoopBufferLineHi", '\%'.line.'l')
+    endfor
+endfunction
 
 
 "   COMMAND
