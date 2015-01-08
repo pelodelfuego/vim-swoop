@@ -99,6 +99,19 @@ function! SwoopMulti()
     endif
 endfunction
 
+function! SwoopPattern(pattern)
+    call Swoop()
+    call setline(1, a:pattern)
+endfunction
+
+function! SwoopMultiPattern(pattern, ...)
+    call SwoopMulti()
+    if a:0 == 1
+        call setline(1, a:000)
+    endif
+    call setline(2, a:pattern)
+endfunction
+
 function! SwoopQuit()
     call s:exitSwoop()
 

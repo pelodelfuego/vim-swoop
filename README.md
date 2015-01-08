@@ -56,15 +56,38 @@ Commands and Configuration
 --------
 
 ###Commands
-* Swoop current Buffer
+Default mapping to use vim-swoop are:
+
+* Swoop current buffer
 ```
 nmap <Leader>l :call Swoop()<CR>
 ```
 
-* Swoop multi Buffers
+* Swoop multi buffers
 ```
 nmap <Leader>ml :call SwoopMulti()<CR>
 ```
+
+
+Those 2 action are also exposedby command line:
+
+* Current buffer function
+```
+SwoopPattern(pattern)
+```
+
+* Multi buffer function
+
+    For all buffer
+```
+SwoopMultiPattern(searchPattern)
+```
+
+    For specific buffer
+```
+SwoopMultiPattern(searchPattern, bufPattern)
+```
+
 
 ###Configuration
 
@@ -81,6 +104,15 @@ let s:regexMode = 0
 ```
 let s:autoInserMode = 0 
 ```
+
+* Edit color theme
+
+    Maybe your colorscheme won't be relevant with Swoop default highlight, by default the config is:
+```
+highlight SwoopBufferLineHi term=bold ctermfg=lightgreen guibg=lightgreen 
+highlight SwoopPatternHi term=bold ctermfg=lightblue guibg=lightblue 
+```
+
 Tips and Tricks
 ---------------
 * Use CursorLine
