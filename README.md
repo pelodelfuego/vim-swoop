@@ -95,14 +95,14 @@ SwoopMultiPattern(searchPattern, bufPattern)
 
     By default, typing \<Space\> in the search pattern is replaced by ".*". You can get classic mode by:
 ```
-let s:regexMode = 0
+let g:swoopRegexMode = 0
 ```
 
 * Disable auto insert mode
 
     By default, you will start in insert mode, you can disable it by:
 ```
-let s:autoInserMode = 0
+let g:swoopAutoInserMode = 0
 ```
 
 

@@ -18,8 +18,8 @@
 
 
 "   CONFIGURATION AND VARIABLES
-let s:autoInsertMode = 1
-let s:regexMode = 1
+let g:swoopAutoInsertMode = 1
+let g:swoopRegexMode = 1
 
 let s:swoopSeparator = "\t"
 let s:multiSwoop = -1
@@ -79,7 +79,7 @@ function! Swoop()
     endif
 
     execute ':1'
-    if s:autoInsertMode == 1
+    if g:swoopAutoInsertMode == 1
         startinsert
     endif
 endfunction
@@ -103,7 +103,7 @@ function! SwoopMulti()
         execute ':1'
     endif
 
-    if s:autoInsertMode == 1
+    if g:swoopAutoInsertMode == 1
         startinsert
     endif
 endfunction
@@ -310,11 +310,11 @@ function! s:getSwoopPattern()
         let patternLine = patternLine.'\c'
     endif
 
-    return s:regexMode == 1 ? join(split(patternLine), '.*')  : patternLine
+    return g:swoopRegexMode == 1 ? join(split(patternLine), '.*')  : patternLine
 endfunction
 
 function! s:getBufPattern()
-    return s:regexMode == 1 ? join(split(getline(1)), '.*') : getline(1)
+    return g:swoopRegexMode == 1 ? join(split(getline(1)), '.*') : getline(1)
 endf
 
 function! s:getSwoopBufList()
