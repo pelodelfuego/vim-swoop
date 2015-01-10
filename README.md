@@ -73,6 +73,8 @@ You can disabledefault mapping by:
 let g:swoopUseDefaultKeyMap = 0
 ```
 
+
+###Other interactions
 Those 2 action are also exposed by the following function:
 
 * Current buffer function
@@ -90,11 +92,6 @@ For all buffer
 For specific buffer
 ```
 :call SwoopMultiPattern(searchPattern, bufPattern)
-```
-
-You can also acces it by:
-```
-
 ```
 
 
