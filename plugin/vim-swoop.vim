@@ -17,7 +17,9 @@
 
 
 
+"   ===========================
 "   CONFIGURATION AND VARIABLES
+"   ===========================
 let g:swoopUseDefaultKeyMap = 1
 
 let g:swoopAutoInsertMode = 1
@@ -27,7 +29,10 @@ let s:swoopSeparator = "\t"
 let s:multiSwoop = -1
 
 
-"   BEGIN EXIT WORKAROUND
+
+"   =======================
+"   BEGIN / EXIT WORKAROUND
+"   =======================
 function! s:initSwoop()
     let s:beforeSwoopBuf = bufnr('%')
     let s:beforeSwoopPos =  getpos('.')
@@ -73,7 +78,9 @@ endfunction
 
 
 
-"   USER INTERACTION
+"   ==========================
+"   USER SHOSRTCUT INTERACTION
+"   ==========================
 function! Swoop()
     if s:multiSwoop == 0
         call setline(1, "")
@@ -118,21 +125,6 @@ function! SwoopMulti()
     endif
 endfunction
 
-function! SwoopPattern(pattern)
-    call Swoop()
-    call setline(1, a:pattern)
-endfunction
-
-function! SwoopMultiPattern(pattern, ...)
-    call SwoopMulti()
-    if a:0 == 1
-        call setline(1, a:000)
-    else
-        call setline(1, "")
-    endif
-    call setline(2, a:pattern)
-endfunction
-
 function! SwoopQuit()
     call s:exitSwoop()
 
@@ -166,7 +158,38 @@ endfunction
 
 
 
+"   ========================
+"   USER COMMAND INTERACTION
+"   ========================
+function! SwoopPattern(pattern)
+    call Swoop()
+    call setline(1, a:pattern)
+endfunction
+
+function! SwoopMultiPattern(pattern, ...)
+    call SwoopMulti()
+    if a:0 == 1
+        call setline(1, a:000)
+    else
+        call setline(1, "")
+    endif
+    call setline(2, a:pattern)
+endfunction
+
+function! s:RunSwoop(searchPattern, isMulti)
+    if empty(a:isMulti)
+        call SwoopPattern(a:searchPattern)
+    else
+        call SwoopMultiPattern(a:searchPattern)
+    endif
+endfunction
+command! -bang -nargs=* Swoop :call <SID>RunSwoop(<q-args>, '<bang>')
+
+
+
+"   =======================
 "   USER HIDDEN INTERACTION
+"   =======================
 function! s:cursorMoved()
     let beforeCursorMoved = getpos('.')
     let currentLine = beforeCursorMoved[1]
@@ -204,7 +227,9 @@ endfunction
 
 
 
+"   =======
 "   DISPLAY
+"   =======
 function! s:displaySwoopResult(beforeCursorMoved)
     let pattern = s:getSwoopPattern()
     let bufferList = s:getSwoopBufList()
@@ -212,10 +237,10 @@ function! s:displaySwoopResult(beforeCursorMoved)
     let results = s:getSwoopResultsLine(bufferList, pattern)
     exec "buffer ". s:swoopBuf
     if s:multiSwoop == 0
-        silent! exec "2,$_d"
+        silent! exec '2,$d'
         call append(1, results)
     else
-        silent! exec "3,$_d"
+        silent! exec '3,$d'
         call append(2, results)
     endif
     call setpos('.', a:beforeCursorMoved)
@@ -223,7 +248,7 @@ endfunction
 
 function! s:displaySwoopBuffer(beforeCursorMoved)
     exec "buffer ". s:swoopBuf
-    silent! exec "3,$_d"
+    silent! exec '3,$d'
 
     let swoopBufList = s:getSwoopBufList()
     let swoopBufStrList = map(copy(swoopBufList), 's:getBufferStr(v:val)')
@@ -279,7 +304,9 @@ endfunction
 
 
 
+"   ================================
 "   ACCESSOR - SINGLE POINT OF ENTRY
+"   ================================
 function! s:extractCurrentLineSwoopInfo()
     return join([bufnr('%'), line('.'), getline('.')], s:swoopSeparator)
 endfunction
@@ -367,7 +394,9 @@ endfunction
 
 
 
+"   ======================
 "   COMPATIBILITY FUNCTION
+"   ======================
 function! s:matchBufferLine(bufferLineList)
     for line in a:bufferLineList
         call matchadd("SwoopBufferLineHi", '\%'.line.'l')
@@ -375,7 +404,10 @@ function! s:matchBufferLine(bufferLineList)
 endfunction
 
 
+
+"   =======
 "   COMMAND
+"   =======
 if g:swoopUseDefaultKeyMap == 1
     nmap <Leader>l :call Swoop()<CR>
     nmap <Leader>ml :call SwoopMulti()<CR>
@@ -383,7 +415,9 @@ endif
 
 
 
+"   ============
 "   AUTO COMMAND
+"   ============
 augroup swoopAutoCmd
     autocmd!    CursorMovedI   swoopBuf   :call   s:cursorMoved()
     autocmd!    CursorMoved    swoopBuf    :call   s:cursorMoved()

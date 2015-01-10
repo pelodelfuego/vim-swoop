@@ -1,0 +1,6 @@
+silen exec
+vim-swoop.vim
+5	215	        silent! exec "2,$_d"
+5	218	        silent! exec "3,$_d"
+5	226	    silent! exec "3,$_d"
+

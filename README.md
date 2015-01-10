@@ -94,6 +94,18 @@ For specific buffer
 :call SwoopMultiPattern(searchPattern, bufPattern)
 ```
 
+A third way to acces Swoop is by a direct command:
+
+For single buffer mode
+```
+:Swoop <pattern>
+```
+
+For all buffer mode
+```
+:Swoop! <pattern>
+```
+
 
 ###Configuration
 
