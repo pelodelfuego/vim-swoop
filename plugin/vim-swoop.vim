@@ -36,6 +36,8 @@ function! s:initSwoop()
     let s:displayWin = bufwinnr('%')
 
     silent bot split swoopBuf
+    execute "setlocal bufhidden=hide"
+    execute "setlocal noswapfile"
     execute "setlocal filetype=".fileType
     let s:swoopBuf = bufnr('%')
 
