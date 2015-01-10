@@ -79,7 +79,7 @@ Those 2 action are also exposed by the following function:
 
 * Current buffer function
 ```
-SwoopPattern(pattern)
+:call SwoopPattern(pattern)
 ```
 
 * Multi buffer function
