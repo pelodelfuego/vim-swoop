@@ -21,6 +21,7 @@
 "   CONFIGURATION AND VARIABLES
 "   ===========================
 let g:swoopUseDefaultKeyMap = 1
+"let g:swoopHighlight =
 
 let g:swoopAutoInsertMode = 1
 let g:swoopRegexMode = 1
