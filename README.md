@@ -82,12 +82,12 @@ SwoopPattern(pattern)
 
 * Multi buffer function
 
-    For all buffer
+For all buffer
 ```
 SwoopMultiPattern(searchPattern)
 ```
 
-    For specific buffer
+For specific buffer
 ```
 SwoopMultiPattern(searchPattern, bufPattern)
 ```
