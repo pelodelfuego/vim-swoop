@@ -57,7 +57,11 @@ Commands and Configuration
 
 ###Commands
 Default mapping to use vim-swoop are:
+You can disabledefault mapping by:
+```
+let g:swoopUseDefaultKeyMap = 0
 
+```
 * Swoop current buffer
 ```
 nmap <Leader>l :call Swoop()<CR>
@@ -69,7 +73,7 @@ nmap <Leader>ml :call SwoopMulti()<CR>
 ```
 
 
-Those 2 action are also exposedby command line:
+Those 2 action are also exposed by command line:
 
 * Current buffer function
 ```
@@ -103,6 +107,13 @@ let g:swoopRegexMode = 0
     By default, you will start in insert mode, you can disable it by:
 ```
 let g:swoopAutoInserMode = 0
+```
+
+* Edit default HightLight
+
+    If default highlight is not relevant with your coloscheme, you can edit it by editing g:swoopHighlight variable, here is an example:
+```
+let g:swoopHighlight = ["hi! link SwoopBufferLineHi Warning", "hi! link SwoopPatternHi Error"]
 ```
 
 

@@ -18,6 +18,8 @@
 
 
 "   CONFIGURATION AND VARIABLES
+let g:swoopUseDefaultKeyMap = 1
+
 let g:swoopAutoInsertMode = 1
 let g:swoopRegexMode = 1
 
@@ -25,6 +27,7 @@ let s:swoopSeparator = "\t"
 let s:multiSwoop = -1
 
 
+let g:swoopHighlight = ["hi! link SwoopBufferLineHi Warning", "hi! link SwoopPatternHi Error"]
 
 "   BEGIN EXIT WORKAROUND
 function! s:initSwoop()
@@ -38,21 +41,30 @@ function! s:initSwoop()
     execute "setlocal filetype=".fileType
     let s:swoopBuf = bufnr('%')
 
-    redir => backgroundColor
-    silent set background?
-    redir END
-    let backgroundColor = split(backgroundColor, '=')[1]
-    if backgroundColor == 'dark'
-        highlight SwoopBufferLineHi term=bold ctermfg=lightgreen gui=bold guifg=lightgreen
-        highlight SwoopPatternHi term=bold ctermfg=lightblue gui=bold guifg=lightblue
-    else
-        highlight SwoopBufferLineHi term=bold ctermfg=lightgreen guibg=lightgreen
-        highlight SwoopPatternHi term=bold ctermfg=lightblue guibg=lightblue
-    endif
+    call s:initHighlight()
 
     imap <buffer> <silent> <CR> <Esc>
     nmap <buffer> <silent> <CR> :call SwoopSelect()<CR>
+endfunction
 
+function! s:initHighlight()
+    if exists("g:swoopHighlight")
+        for val in g:swoopHighlight
+            execute val
+        endfor
+    else
+        redir => backgroundColor
+        silent set background?
+        redir END
+        let backgroundColor = split(backgroundColor, '=')[1]
+        if backgroundColor == 'dark'
+            highlight SwoopBufferLineHi term=bold ctermfg=lightgreen gui=bold guifg=lightgreen
+            highlight SwoopPatternHi term=bold ctermfg=lightblue gui=bold guifg=lightblue
+        else
+            highlight SwoopBufferLineHi term=bold ctermfg=lightgreen guibg=lightgreen
+            highlight SwoopPatternHi term=bold ctermfg=lightblue guibg=lightblue
+        endif
+    endif
 endfunction
 
 function! s:exitSwoop()
@@ -285,6 +297,7 @@ endfunction
 function! s:getSwoopResultsLine(bufferList, pattern)
     let results = []
     let s:bufferLineList = s:multiSwoop == 1 ? [1] : []
+
     for currentBuffer in a:bufferList
         execute "buffer ". currentBuffer
         let currentBufferResults = []
@@ -365,8 +378,10 @@ endfunction
 
 
 "   COMMAND
-nmap <Leader>l :call Swoop()<CR>
-nmap <Leader>ml :call SwoopMulti()<CR>
+if g:swoopUseDefaultKeyMap == 1
+    nmap <Leader>l :call Swoop()<CR>
+    nmap <Leader>ml :call SwoopMulti()<CR>
+endif
 
 
 
