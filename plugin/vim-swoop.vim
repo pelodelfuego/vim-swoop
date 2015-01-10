@@ -41,8 +41,6 @@ function! s:initSwoop()
     let s:displayWin = bufwinnr('%')
 
     silent bot split swoopBuf
-    execute "setlocal bufhidden=hide"
-    execute "setlocal noswapfile"
     execute "setlocal filetype=".fileType
     let s:swoopBuf = bufnr('%')
 
@@ -423,6 +421,6 @@ augroup swoopAutoCmd
     autocmd!    CursorMovedI   swoopBuf   :call   s:cursorMoved()
     autocmd!    CursorMoved    swoopBuf    :call   s:cursorMoved()
 
-    autocmd!    BufWrite    swoopBuf    :call   SwoopSave()
+    autocmd!    BufWriteCmd    swoopBuf    :call   SwoopSave()
     autocmd!    BufLeave   swoopBuf   :call    SwoopQuit()
 augroup END
