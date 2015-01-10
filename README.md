@@ -57,10 +57,6 @@ Commands and Configuration
 
 ###Commands
 Default mapping to use vim-swoop are:
-You can disabledefault mapping by:
-```
-let g:swoopUseDefaultKeyMap = 0
-```
 
 * Swoop current buffer
 ```
@@ -72,8 +68,12 @@ nmap <Leader>l :call Swoop()<CR>
 nmap <Leader>ml :call SwoopMulti()<CR>
 ```
 
+You can disabledefault mapping by:
+```
+let g:swoopUseDefaultKeyMap = 0
+```
 
-Those 2 action are also exposed by command line:
+Those 2 action are also exposed by the following function:
 
 * Current buffer function
 ```
@@ -84,12 +84,17 @@ SwoopPattern(pattern)
 
 For all buffer
 ```
-SwoopMultiPattern(searchPattern)
+:call SwoopMultiPattern(searchPattern)
 ```
 
 For specific buffer
 ```
-SwoopMultiPattern(searchPattern, bufPattern)
+:call SwoopMultiPattern(searchPattern, bufPattern)
+```
+
+You can also acces it by:
+```
+
 ```
 
 
