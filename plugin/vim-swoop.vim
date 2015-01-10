@@ -27,8 +27,6 @@ let s:swoopSeparator = "\t"
 let s:multiSwoop = -1
 
 
-let g:swoopHighlight = ["hi! link SwoopBufferLineHi Warning", "hi! link SwoopPatternHi Error"]
-
 "   BEGIN EXIT WORKAROUND
 function! s:initSwoop()
     let s:beforeSwoopBuf = bufnr('%')
