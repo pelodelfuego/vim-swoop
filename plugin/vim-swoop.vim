@@ -117,6 +117,8 @@ function! SwoopMultiPattern(pattern, ...)
     call SwoopMulti()
     if a:0 == 1
         call setline(1, a:000)
+    else
+        call setline(1, "")
     endif
     call setline(2, a:pattern)
 endfunction
