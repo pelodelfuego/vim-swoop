@@ -212,10 +212,10 @@ function! s:displaySwoopResult(beforeCursorMoved)
     let results = s:getSwoopResultsLine(bufferList, pattern)
     exec "buffer ". s:swoopBuf
     if s:multiSwoop == 0
-        silent! exec "2,$d"
+        silent! exec "2,$d_"
         call append(1, results)
     else
-        silent! exec "3,$d"
+        silent! exec "3,$d_"
         call append(2, results)
     endif
     call setpos('.', a:beforeCursorMoved)
@@ -223,7 +223,7 @@ endfunction
 
 function! s:displaySwoopBuffer(beforeCursorMoved)
     exec "buffer ". s:swoopBuf
-    silent! exec "3,$d"
+    silent! exec "3,$d_"
 
     let swoopBufList = s:getSwoopBufList()
     let swoopBufStrList = map(copy(swoopBufList), 's:getBufferStr(v:val)')
