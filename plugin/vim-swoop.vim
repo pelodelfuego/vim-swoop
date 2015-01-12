@@ -1,4 +1,4 @@
-"   Vim Swoop   1.0.1
+"   Vim Swoop   1.0.1skdjs
 
 "Copyright (C) 2015 copyright Clément CREPY
 "
@@ -24,7 +24,7 @@ let g:swoopUseDefaultKeyMap = 1
 "let g:swoopHighlight =
 
 let g:swoopAutoInsertMode = 1
-let g:swoopRegexMode = 1
+let g:swoopSpaceInsertsWildcard=1
 
 let s:swoopSeparator = "\t"
 let s:multiSwoop = -1
@@ -37,7 +37,7 @@ let s:multiSwoop = -1
 function! s:initSwoop()
     let s:beforeSwoopBuf = bufnr('%')
     let s:beforeSwoopPos =  getpos('.')
-    let fileType = &ft
+    let fileType = &ft"testcomment
 
     let s:displayWin = bufwinnr('%')
 
@@ -136,8 +136,14 @@ function! SwoopQuit()
 endfunction
 
 function! SwoopSave()
+    let currentLine = line('.')
     execute "g/.*/call s:setSwoopLine(s:getCurrentLineSwoopInfo())"
-    execute ":1"
+    execute ":".currentLine
+endfunction
+
+function! SwoopSaveAndQuit()
+    call SwoopSave()
+    silent call SwoopQuit()
 endfunction
 
 function! SwoopSelect()
@@ -271,7 +277,6 @@ function! s:displayCurrentContext()
         normal zz
 
         execute "wincmd p"
-
     endif
 endfunction
 
@@ -350,11 +355,11 @@ function! s:getSwoopPattern()
         let patternLine = patternLine.'\c'
     endif
 
-    return g:swoopRegexMode == 1 ? join(split(patternLine), '.*')  : patternLine
+    return g:swoopSpaceInsertsWildcard== 1 ? join(split(patternLine), '.*')  : patternLine
 endfunction
 
 function! s:getBufPattern()
-    return g:swoopRegexMode == 1 ? join(split(getline(1)), '.*') : getline(1)
+    return g:swoopSpaceInsertsWildcard== 1 ? join(split(getline(1)), '.*') : getline(1)
 endf
 
 function! s:getSwoopBufList()
@@ -423,5 +428,5 @@ augroup swoopAutoCmd
     autocmd!    CursorMoved    swoopBuf    :call   s:cursorMoved()
 
     autocmd!    BufWriteCmd    swoopBuf    :call   SwoopSave()
-    autocmd!    BufLeave   swoopBuf   :call    SwoopQuit()
+    autocmd!    BufLeave   swoopBuf   :call    SwoopSaveAndQuit()
 augroup END

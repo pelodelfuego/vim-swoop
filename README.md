@@ -25,12 +25,12 @@ First one contain context, the other is the swoop buffer. As you move the cursor
 From the swoop buffer, you can:
 * Interactivly edit your search
 * Navigate in results (and context) by moving the cursor
-* Select current result.
-*Exit Swoop and go to the location of current match when you press \<CR\>*
-* Edit and save Swoop Buffer.
+* Edit and save Swoop Buffer ```:w```.
 *The changes will be repercuted on all files by saving the Swoop Buffer*
-* Quit Swoop.
-*Exiting Swoop will bring you back to the initial buffer and position.*
+* Select current result.
+*Exit and Save Swoop and go to the location of current match when you press \<CR\>*
+* Quit Swoop ```:q```.
+*Exit Swoop will save modifications and bring you back to the initial buffer and position.*
 * Toggle single and multi buffer mode
 
 ###single buffer mode
