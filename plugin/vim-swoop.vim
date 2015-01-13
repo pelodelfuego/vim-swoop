@@ -22,10 +22,10 @@
 "   ===========================
 let g:swoopUseDefaultKeyMap = 1
 "let g:swoopHighlight =
+let g:swoopWindowsVerticalLayout = 0
 
 let g:swoopAutoInsertMode = 1
 let g:swoopSpaceInsertsWildcard = 1
-let g:swoopWindowsVerticalLayout = 0
 
 let s:swoopSeparator = "\t"
 let s:multiSwoop = -1
@@ -48,6 +48,7 @@ function! s:initSwoop()
         silent bot split swoopBuf
     endif
 
+    silent execute ":e!"
     execute "setlocal filetype=".fileType
     let s:swoopBuf = bufnr('%')
 
@@ -168,7 +169,6 @@ function! SwoopSelect()
     endif
     normal zz
 endfunction
-
 
 
 "   ========================
