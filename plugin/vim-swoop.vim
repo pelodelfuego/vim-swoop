@@ -1,4 +1,4 @@
-"   Vim Swoop   1.0.1skdjs
+"   Vim Swoop   1.0.2
 
 "Copyright (C) 2015 copyright Clément CREPY
 "
@@ -24,7 +24,8 @@ let g:swoopUseDefaultKeyMap = 1
 "let g:swoopHighlight =
 
 let g:swoopAutoInsertMode = 1
-let g:swoopSpaceInsertsWildcard=1
+let g:swoopSpaceInsertsWildcard = 1
+let g:swoopWindowsVerticalLayout = 1
 
 let s:swoopSeparator = "\t"
 let s:multiSwoop = -1
@@ -41,7 +42,12 @@ function! s:initSwoop()
 
     let s:displayWin = bufwinnr('%')
 
-    silent bot split swoopBuf
+    if g:swoopWindowsVerticalLayout == 1
+        silent bot vsplit swoopBuf
+    else
+        silent bot split swoopBuf
+    endif
+
     execute "setlocal filetype=".fileType
     let s:swoopBuf = bufnr('%')
 

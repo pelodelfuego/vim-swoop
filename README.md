@@ -123,6 +123,13 @@ let g:swoopRegexMode = 0
 let g:swoopAutoInserMode = 0
 ```
 
+* Disable auto insert mode
+
+    By default, layout will be horizontal, you can set it vertical by:
+```
+let g:swoopWindowsVerticalLayout = 1
+```
+
 * Edit default HightLight
 
     If default highlight is not relevant with your colorscheme, you can edit it by editing g:swoopHighlight variable, here is an example:
@@ -171,9 +178,7 @@ git clone https://github.com/pelodelfuego/vim-swoop ~/.vim/bundle/vim-swoop
 
 Upcomming feature and improvement
 -----------------
-* Display empty buffer in display window when no context available (ie pattern or buffer name)
 * Swoop Current selection
-* Option to choose display windows place
 * SmartCase search
 
 
