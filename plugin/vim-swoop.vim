@@ -25,7 +25,7 @@ let g:swoopUseDefaultKeyMap = 1
 
 let g:swoopAutoInsertMode = 1
 let g:swoopSpaceInsertsWildcard = 1
-let g:swoopWindowsVerticalLayout = 1
+let g:swoopWindowsVerticalLayout = 0
 
 let s:swoopSeparator = "\t"
 let s:multiSwoop = -1
