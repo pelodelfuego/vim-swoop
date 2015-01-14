@@ -1,4 +1,4 @@
-"   Vim Swoop   1.0.2
+"   Vim Swoop   1.0.3
 
 "Copyright (C) 2015 copyright Clément CREPY
 "
@@ -177,6 +177,7 @@ endfunction
 function! SwoopPattern(pattern)
     call Swoop()
     call setline(1, a:pattern)
+    stopinsert
 endfunction
 
 function! SwoopMultiPattern(pattern, ...)
@@ -187,6 +188,7 @@ function! SwoopMultiPattern(pattern, ...)
         call setline(1, "")
     endif
     call setline(2, a:pattern)
+    stopinsert
 endfunction
 
 function! s:RunSwoop(searchPattern, isMulti)
@@ -195,7 +197,9 @@ function! s:RunSwoop(searchPattern, isMulti)
     else
         call SwoopMultiPattern(a:searchPattern)
     endif
+    stopinsert
 endfunction
+
 command! -bang -nargs=* Swoop :call <SID>RunSwoop(<q-args>, '<bang>')
 
 
