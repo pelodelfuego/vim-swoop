@@ -160,6 +160,11 @@ Tips and Tricks
 
     Since the context display depends of the cursor movement, you can lauch a search inside the search buffer
 
+* Use VisualMode in the swoop Buffer
+
+    When you use visual mode in the swoopBuffer, the context won't be available anymore but it still an usefull tool to refactor in the swoopBuffer
+
+
 * Use last search
 
     When you start swoop (either the mode) and don't enter any pattern, search result will be your last search.
