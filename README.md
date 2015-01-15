@@ -162,7 +162,8 @@ Tips and Tricks
 
 * Use VisualMode in the swoop Buffer
 
-    When you use visual mode in the swoopBuffer, the context won't be available anymore but it still an usefull tool to refactor in the swoopBuffer
+    When you use visual mode in the swoopBuffer, the context won't be available anymore if you select more than 2 lines.
+    But really usefull on refactoring session: you can keep only the lines you want to refactor and execute global replace.
 
 
 * Use last search
