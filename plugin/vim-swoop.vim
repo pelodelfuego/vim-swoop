@@ -30,8 +30,6 @@ let g:swoopSpaceInsertsWildcard = 1
 let s:swoopSeparator = "\t"
 let s:multiSwoop = -1
 
-getreg('/') "to init reg
-
 
 "   =======================
 "   BEGIN / EXIT WORKAROUND
