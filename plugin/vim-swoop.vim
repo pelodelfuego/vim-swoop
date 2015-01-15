@@ -208,10 +208,9 @@ command! -bang -nargs=* Swoop :call <SID>RunSwoop(<q-args>, '<bang>')
 "   USER HIDDEN INTERACTION
 "   =======================
 function! s:cursorMoved()
-    if mode() == 'v'
+    if s:needFreezeContext() == 1
         return
     endif
-
     let beforeCursorMoved = getpos('.')
     let currentLine = beforeCursorMoved[1]
 
@@ -420,6 +419,14 @@ function! s:matchBufferLine(bufferLineList)
     for line in a:bufferLineList
         call matchadd("SwoopBufferLineHi", '\%'.line.'l')
     endfor
+endfunction
+
+function! s:needFreezeContext()
+    if mode() == 'v'
+        return 1
+    else
+        return 0
+    endif
 endfunction
 
 
