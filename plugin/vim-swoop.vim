@@ -208,6 +208,10 @@ command! -bang -nargs=* Swoop :call <SID>RunSwoop(<q-args>, '<bang>')
 "   USER HIDDEN INTERACTION
 "   =======================
 function! s:cursorMoved()
+    if mode() == 'v'
+        return
+    endif
+
     let beforeCursorMoved = getpos('.')
     let currentLine = beforeCursorMoved[1]
 
@@ -349,7 +353,7 @@ function! s:getSwoopResultsLine(bufferList, pattern)
             call add(results, "")
         endif
     endfor
-    return  results
+    return results
 endfunction
 
 function! s:getSwoopPattern()
