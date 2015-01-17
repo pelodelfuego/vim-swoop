@@ -52,10 +52,11 @@ Second line contains the search pattern just like in single buffer mode
 
 ![](https://raw.githubusercontent.com/pelodelfuego/vim-swoop/dev/doc/images/multiModeSwoopPatternScreenshot.png)
 
-Commands and Configuration
+
+Interactions
 --------
 
-###Commands
+###KeyMap
 Default mapping to use vim-swoop are:
 
 * Swoop current buffer
@@ -73,8 +74,7 @@ You can disabledefault mapping by:
 let g:swoopUseDefaultKeyMap = 0
 ```
 
-
-###Other interactions
+###Function
 Those 2 action are also exposed by the following function:
 
 * Current buffer function
@@ -94,6 +94,7 @@ For specific buffer
 :call SwoopMultiPattern(searchPattern, bufPattern)
 ```
 
+###Command
 A third way to acces Swoop is by a direct command:
 
 For single buffer mode
@@ -107,7 +108,8 @@ For all buffer mode
 ```
 
 
-###Configuration
+Configuration
+-------------
 
 * Disable quick regex mode
 
@@ -167,13 +169,13 @@ Tips and Tricks
 
 Interaction with other plugin
 -----------------------------
-* (vim-session)[https://github.com/xolox/vim-session]
+* [ vim-session ]( https://github.com/xolox/vim-session )
 
     If you use it, beaware that it doesn't keep buffer filetype in memory.
 
     I'm working on an integration
 
-* (vim-multiple-cursor)[https://github.com/terryma/vim-multiple-cursors]
+* [ vim-multiple-cursor ]( https://github.com/terryma/vim-multiple-cursors )
 
     You can combine multiple and vim-swoop, to make it compatible (no context move while multiple cursor), you want to add this to you .vimrc
     ```
