@@ -1,4 +1,4 @@
-"   Vim Swoop   1.0.3
+"   Vim Swoop   1.0.4
 
 "Copyright (C) 2015 copyright Clément CREPY
 "
@@ -25,10 +25,12 @@ let g:swoopUseDefaultKeyMap = 1
 let g:swoopWindowsVerticalLayout = 0
 
 let g:swoopAutoInsertMode = 1
-let g:swoopSpaceInsertsWildcard = 1
+let g:swoopPatternSpaceInsertsWildcard = 1
+
+let s:multiSwoop = -1
+let s:freezeContext = 0
 
 let s:swoopSeparator = "\t"
-let s:multiSwoop = -1
 
 
 "   =======================
@@ -37,7 +39,7 @@ let s:multiSwoop = -1
 function! s:initSwoop()
     let s:beforeSwoopBuf = bufnr('%')
     let s:beforeSwoopPos =  getpos('.')
-    let fileType = &ft"testcomment
+    let fileType = &ft
 
     let s:displayWin = bufwinnr('%')
 
@@ -47,7 +49,6 @@ function! s:initSwoop()
         silent bot split swoopBuf
     endif
 
-    silent execute ":e!"
     execute "setlocal filetype=".fileType
     let s:swoopBuf = bufnr('%')
 
@@ -78,7 +79,7 @@ function! s:initHighlight()
 endfunction
 
 function! s:exitSwoop()
-    silent bdelete! swoopBuf
+    silent bw! swoopBuf
     call clearmatches()
     let s:multiSwoop = -1
 endfunction
@@ -198,7 +199,6 @@ function! s:RunSwoop(searchPattern, isMulti)
     endif
     stopinsert
 endfunction
-
 command! -bang -nargs=* Swoop :call <SID>RunSwoop(<q-args>, '<bang>')
 
 
@@ -311,12 +311,7 @@ function! s:displayHighlight()
     call matchadd("SwoopPatternHi", pattern)
     execute "wincmd p"
 
-    if exists("*matchaddpos") == 0
-        call s:matchBufferLine(s:bufferLineList)
-    else
-        call matchaddpos("SwoopBufferLineHi", s:bufferLineList)
-    endif
-
+    call s:matchBufferLine(s:bufferLineList)
 endfunction
 
 
@@ -367,11 +362,11 @@ function! s:getSwoopPattern()
         let patternLine = patternLine.'\c'
     endif
 
-    return g:swoopSpaceInsertsWildcard== 1 ? join(split(patternLine), '.*')  : patternLine
+    return g:swoopPatternSpaceInsertsWildcard == 1 ? join(split(patternLine), '.*')  : patternLine
 endfunction
 
 function! s:getBufPattern()
-    return g:swoopSpaceInsertsWildcard== 1 ? join(split(getline(1)), '.*') : getline(1)
+    return g:swoopPatternSpaceInsertsWildcard == 1 ? join(split(getline(1)), '.*') : getline(1)
 endf
 
 function! s:getSwoopBufList()
@@ -401,7 +396,7 @@ function! s:setSwoopLine(swoopInfo)
         execute "buffer ". bufTarget
         let oldLine = getline(lineTarget)
 
-        if oldLine != newLine
+        if oldLine !=# newLine
             call setline(lineTarget, newLine)
         endif
 
@@ -415,19 +410,34 @@ endfunction
 "   COMPATIBILITY FUNCTION
 "   ======================
 function! s:matchBufferLine(bufferLineList)
-    for line in a:bufferLineList
-        call matchadd("SwoopBufferLineHi", '\%'.line.'l')
-    endfor
+    if exists("*matchaddpos") == 0
+        for line in a:bufferLineList
+            call matchadd("SwoopBufferLineHi", '\%'.line.'l')
+        endfor
+    else
+        call matchaddpos("SwoopBufferLineHi", s:bufferLineList)
+    endif
 endfunction
 
 function! s:needFreezeContext()
     if mode() == 'v'
         return 1
     else
-        return 0
+       if s:freezeContext == 1
+           return 1
+       else
+           return 0
+       endif
     endif
 endfunction
 
+function! SwoopFreezeContext()
+    let s:freezeContext = 1
+endfunction
+
+function! SwoopUnFreezeContext()
+    let s:freezeContext = 0
+endfunction
 
 
 "   =======

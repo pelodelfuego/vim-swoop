@@ -52,10 +52,11 @@ Second line contains the search pattern just like in single buffer mode
 
 ![](https://raw.githubusercontent.com/pelodelfuego/vim-swoop/dev/doc/images/multiModeSwoopPatternScreenshot.png)
 
-Commands and Configuration
+
+Interactions
 --------
 
-###Commands
+###KeyMap
 Default mapping to use vim-swoop are:
 
 * Swoop current buffer
@@ -73,8 +74,7 @@ You can disabledefault mapping by:
 let g:swoopUseDefaultKeyMap = 0
 ```
 
-
-###Other interactions
+###Function
 Those 2 action are also exposed by the following function:
 
 * Current buffer function
@@ -94,6 +94,7 @@ For specific buffer
 :call SwoopMultiPattern(searchPattern, bufPattern)
 ```
 
+###Command
 A third way to acces Swoop is by a direct command:
 
 For single buffer mode
@@ -107,13 +108,14 @@ For all buffer mode
 ```
 
 
-###Configuration
+Configuration
+-------------
 
 * Disable quick regex mode
 
     By default, typing \<Space\> in the search pattern is replaced by ".*". You can get classic mode by:
 ```
-let g:swoopRegexMode = 0
+let g:swoopPatternSpaceInsertsWildcard = 0
 ```
 
 * Disable auto insert mode
@@ -144,12 +146,6 @@ Tips and Tricks
 
     I strongly advise to highlight current line. It will help you to keep focus on the context of the current match.
 
-* FileType and Session
-
-    If you use [Vim-session](https://github.com/xolox/vim-session), be aware that it doesn't keep buffer filetype in memory.
-
-    I'm working on this issue.
-
 * Toggle mode
 
     You can toggle single and multi buffer mode, your Pattern will stay the same.
@@ -162,13 +158,42 @@ Tips and Tricks
 
 * Use VisualMode in the swoop Buffer
 
-    When you use visual mode in the swoopBuffer, the context won't be available anymore if you select more than 2 lines.
-    But really usefull on refactoring session: you can keep only the lines you want to refactor and execute global replace.
+    When you use visual mode in the swoopBuffer, the context will freeze if you select more than 2 lines.
+    But it is really usefull on refactoring session: you can keep only the lines you want to refactor and execute global replace.
 
 
 * Use last search
 
     When you start swoop (either the mode) and don't enter any pattern, search result will be your last search.
+
+
+Interaction with other plugin
+-----------------------------
+* [ vim-session ]( https://github.com/xolox/vim-session )
+
+    If you use it, beaware that it doesn't keep buffer filetype in memory.
+
+    I'm working on an integration
+
+* [ vim-multiple-cursor ]( https://github.com/terryma/vim-multiple-cursors )
+
+    You can combine multiple and vim-swoop, to make it compatible (no context move while multiple cursor), you want to add this to you .vimrc
+    ```
+    function! Multiple_cursors_before()
+        if exists('*SwoopFreezeContext') != 0
+            call SwoopFreezeContext()
+        endif
+    endfunction
+
+    function! Multiple_cursors_after()
+        if exists('*SwoopUnFreezeContext') != 0
+            call SwoopUnFreezeContext()
+        endif
+    endfunction
+    ```
+
+
+
 
 Installation and dependancies
 -----------------------------
