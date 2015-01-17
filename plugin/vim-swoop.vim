@@ -31,14 +31,13 @@ let s:swoopSeparator = "\t"
 let s:multiSwoop = -1
 
 
-
 "   =======================
 "   BEGIN / EXIT WORKAROUND
 "   =======================
 function! s:initSwoop()
     let s:beforeSwoopBuf = bufnr('%')
     let s:beforeSwoopPos =  getpos('.')
-    let fileType = &ft"testcomment
+    let fileType = &ft
 
     let s:displayWin = bufwinnr('%')
 
@@ -48,7 +47,6 @@ function! s:initSwoop()
         silent bot split swoopBuf
     endif
 
-    silent execute ":e!"
     execute "setlocal filetype=".fileType
     let s:swoopBuf = bufnr('%')
 
@@ -79,7 +77,7 @@ function! s:initHighlight()
 endfunction
 
 function! s:exitSwoop()
-    silent bdelete! swoopBuf
+    silent bw! swoopBuf
     call clearmatches()
     let s:multiSwoop = -1
 endfunction
@@ -368,11 +366,11 @@ function! s:getSwoopPattern()
         let patternLine = patternLine.'\c'
     endif
 
-    return g:swoopSpaceInsertsWildcard== 1 ? join(split(patternLine), '.*')  : patternLine
+    return g:swoopSpaceInsertsWildcard == 1 ? join(split(patternLine), '.*')  : patternLine
 endfunction
 
 function! s:getBufPattern()
-    return g:swoopSpaceInsertsWildcard== 1 ? join(split(getline(1)), '.*') : getline(1)
+    return g:swoopSpaceInsertsWildcard == 1 ? join(split(getline(1)), '.*') : getline(1)
 endf
 
 function! s:getSwoopBufList()
@@ -402,7 +400,7 @@ function! s:setSwoopLine(swoopInfo)
         execute "buffer ". bufTarget
         let oldLine = getline(lineTarget)
 
-        if oldLine != newLine
+        if oldLine !=# newLine
             call setline(lineTarget, newLine)
         endif
 
