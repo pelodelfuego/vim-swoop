@@ -62,11 +62,13 @@ Default mapping to use vim-swoop are:
 * Swoop current buffer
 ```
 nmap <Leader>l :call Swoop()<CR>
+vmap <Leader>l :call SwoopSelection()<CR>
 ```
 
 * Swoop multi buffers
 ```
 nmap <Leader>ml :call SwoopMulti()<CR>
+vmap <Leader>ml :call SwoopMultiSelection()<CR>
 ```
 
 You can disabledefault mapping by:
@@ -209,7 +211,6 @@ git clone https://github.com/pelodelfuego/vim-swoop ~/.vim/bundle/vim-swoop
 
 Upcomming feature and improvement
 -----------------
-* Swoop Current selection
 * SmartCase search
 
 
