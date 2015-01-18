@@ -170,6 +170,17 @@ function! SwoopSelect()
     normal zz
 endfunction
 
+function! SwoopSelection()
+    let selectedText = s:getVisualSelectionSingleLine()
+    call SwoopPattern(selectedText)
+endf
+
+function! SwoopMultiSelection()
+    let selectedText = s:getVisualSelectionSingleLine()
+    call SwoopMultiPattern(selectedText)
+endf
+
+
 
 "   ========================
 "   USER COMMAND INTERACTION
@@ -439,6 +450,11 @@ function! SwoopUnFreezeContext()
     let s:freezeContext = 0
 endfunction
 
+function! s:getVisualSelectionSingleLine()
+    return getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]]
+endfunction
+
+
 
 "   =======
 "   COMMAND
@@ -446,6 +462,8 @@ endfunction
 if g:swoopUseDefaultKeyMap == 1
     nmap <Leader>l :call Swoop()<CR>
     nmap <Leader>ml :call SwoopMulti()<CR>
+    vmap <Leader>l :call SwoopSelection()<CR>
+    vmap <Leader>ml :call SwoopMultiSelection()<CR>
 endif
 
 
