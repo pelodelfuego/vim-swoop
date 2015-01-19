@@ -40,7 +40,7 @@ let s:swoopSeparator = "\t"
 function! s:initSwoop()
     let s:beforeSwoopBuf = bufnr('%')
     let s:beforeSwoopPos =  getpos('.')
-    let fileType = &ft
+    let initFileType = &ft
 
     let s:displayWin = bufwinnr('%')
 
@@ -50,7 +50,7 @@ function! s:initSwoop()
         silent bot split swoopBuf
     endif
 
-    execute "setlocal filetype=".fileType
+    execute "setlocal filetype=".initFileType
     let s:swoopBuf = bufnr('%')
 
     call s:initHighlight()
