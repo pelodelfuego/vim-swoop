@@ -134,6 +134,13 @@ let g:swoopAutoInserMode = 0
 let g:swoopWindowsVerticalLayout = 1
 ```
 
+* Lazy Filetype Load
+
+    By default, filetype are lazy loaded when itering over multifile, you can disable this by:
+```
+let g:swoopLazyLoadFileType = 0
+```
+
 * Edit default HightLight
 
     If default highlight is not relevant with your colorscheme, you can edit it by editing g:swoopHighlight variable, here is an example:
