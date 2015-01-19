@@ -23,6 +23,7 @@
 let g:swoopUseDefaultKeyMap = 1
 "let g:swoopHighlight =
 let g:swoopWindowsVerticalLayout = 0
+let g:swoopLazyLoadFileType = 1
 
 let g:swoopAutoInsertMode = 1
 let g:swoopPatternSpaceInsertsWildcard = 1
@@ -290,17 +291,25 @@ endfunction
 function! s:displayCurrentContext()
     let swoopInfo = s:getCurrentLineSwoopInfo()
     if len(swoopInfo) >= 3
-        let bufname = swoopInfo[0]
+        let bufNumber = swoopInfo[0]
         let lineNumber = swoopInfo[1]
         let pattern = s:getSwoopPattern()
 
         exec s:displayWin." wincmd w"
-        exec "buffer ". bufname
+        exec "buffer ". bufNumber
         let currentFileType = &ft
+
+        if g:swoopLazyLoadFileType == 1
+            if empty(currentFileType)
+                execute "filetype detect"
+                let currentFileType = $ft
+            endif
+        endif
         exec ":".lineNumber
         normal zz
 
         execute "wincmd p"
+        execute "setlocal filetype=".currentFileType
     endif
 endfunction
 
