@@ -178,12 +178,6 @@ Tips and Tricks
 
 Interaction with other plugin
 -----------------------------
-* [ vim-session ]( https://github.com/xolox/vim-session )
-
-    If you use it, beaware that it doesn't keep buffer filetype in memory.
-
-    I'm working on an integration
-
 * [ vim-multiple-cursor ]( https://github.com/terryma/vim-multiple-cursors )
 
     You can combine multiple and vim-swoop, to make it compatible (no context move while multiple cursor), you want to add this to you .vimrc
