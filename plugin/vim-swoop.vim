@@ -223,22 +223,26 @@ function! s:cursorMoved()
     if s:needFreezeContext() == 1
         return
     endif
+
     let beforeCursorMoved = getpos('.')
     let currentLine = beforeCursorMoved[1]
 
     if s:multiSwoop == 0
         if currentLine == 1
             call s:displaySwoopResult(beforeCursorMoved)
+            call s:breakUndoBlock()
         else
             call s:displayCurrentContext()
         endif
     else
         if currentLine == 1
             call s:displaySwoopBuffer(beforeCursorMoved)
+            call s:breakUndoBlock()
             let s:bufferLineList = [1]
         else
             if currentLine == 2
                 call s:displaySwoopResult(beforeCursorMoved)
+                call s:breakUndoBlock()
             else
                 call s:displayCurrentContext()
             endif
@@ -460,8 +464,19 @@ function! SwoopUnFreezeContext()
     let s:freezeContext = 0
 endfunction
 
+
+
+"   =======
+"   TOOLBOX
+"   =======
 function! s:getVisualSelectionSingleLine()
     return getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]]
+endfunction
+
+function! s:breakUndoBlock()
+    if mode() == 'i'
+        call feedkeys("\<C-G>u", "nt")
+    endif
 endfunction
 
 
