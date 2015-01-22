@@ -163,7 +163,7 @@ Tips and Tricks
 
 * Search in swoop buffer
 
-    Since the context display depends of the cursor movement, you can lauch a search inside the search buffer
+    Since the context display depends of the cursor movement, you can lauch a search inside the search buffer.
 
 * Use VisualMode in the swoop Buffer
 
