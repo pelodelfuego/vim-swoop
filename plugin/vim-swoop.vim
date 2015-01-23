@@ -20,13 +20,23 @@
 "   ===========================
 "   CONFIGURATION AND VARIABLES
 "   ===========================
-let g:swoopUseDefaultKeyMap = 1
+if !exists('g:swoopUseDefaultKeyMap')
+    let g:swoopUseDefaultKeyMap = 1
+endif
 "let g:swoopHighlight =
-let g:swoopWindowsVerticalLayout = 0
-let g:swoopLazyLoadFileType = 1
+if !exists('g:swoopWindowsVerticalLayout')
+    let g:swoopWindowsVerticalLayout = 0
+endif
 
-let g:swoopAutoInsertMode = 1
-let g:swoopPatternSpaceInsertsWildcard = 1
+if !exists('g:swoopLazyLoadFileType')
+    let g:swoopLazyLoadFileType = 1
+endif
+if !exists('g:swoopAutoInsertMode')
+    let g:swoopAutoInsertMode = 1
+endif
+if !exists('g:swoopPatternSpaceInsertsWildcard')
+    let g:swoopPatternSpaceInsertsWildcard = 1
+endif
 
 let s:multiSwoop = -1
 let s:freezeContext = 0
