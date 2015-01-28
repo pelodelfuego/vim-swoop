@@ -27,6 +27,7 @@ let g:swoopLazyLoadFileType = 1
 
 let g:swoopAutoInsertMode = 1
 let g:swoopPatternSpaceInsertsWildcard = 1
+let g:swoopIgnoreCase = 0
 
 let s:multiSwoop = -1
 let s:freezeContext = 0
@@ -230,19 +231,16 @@ function! s:cursorMoved()
     if s:multiSwoop == 0
         if currentLine == 1
             call s:displaySwoopResult(beforeCursorMoved)
-            call s:breakUndoBlock()
         else
             call s:displayCurrentContext()
         endif
     else
         if currentLine == 1
             call s:displaySwoopBuffer(beforeCursorMoved)
-            call s:breakUndoBlock()
             let s:bufferLineList = [1]
         else
             if currentLine == 2
                 call s:displaySwoopResult(beforeCursorMoved)
-                call s:breakUndoBlock()
             else
                 call s:displayCurrentContext()
             endif
@@ -381,10 +379,10 @@ function! s:getSwoopPattern()
         let patternLine = getline(2)
     endif
 
-    if empty(patternLine)
-        return ''
-    else
-        let patternLine = patternLine.'\c'
+    let patternLine = empty(patternLine) ? @/ : patternLine
+
+    if g:swoopIgnoreCase == 1
+        let patternLine . '\c'
     endif
 
     return g:swoopPatternSpaceInsertsWildcard == 1 ? join(split(patternLine), '.*')  : patternLine
@@ -472,13 +470,6 @@ endfunction
 function! s:getVisualSelectionSingleLine()
     return getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]]
 endfunction
-
-function! s:breakUndoBlock()
-    if mode() == 'i'
-        call feedkeys("\<C-G>u", "nt")
-    endif
-endfunction
-
 
 
 "   =======
