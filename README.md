@@ -122,7 +122,7 @@ let g:swoopIgnoreCase = 1
 
 * Disable quick regex mode
 
-    By default, typing \<Space\> in the search pattern is replaced by ```.*```. And to type an actual space, you will need to escape it  ```\<Space>```.
+    By default, typing ```\<Space\>``` in the search pattern is replaced by ```.*```. And to type an actual space, you will need to escape it  ```\<Space>```.
     You can get classic mode by:
 ```
 let g:swoopPatternSpaceInsertsWildcard = 0
