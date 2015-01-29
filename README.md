@@ -113,9 +113,17 @@ For all buffer mode
 Configuration
 -------------
 
+* set search case insensitive
+
+    By default, smartcase is set, you can go to case insensitive search by:
+```
+let g:swoopIgnoreCase = 1
+```
+
 * Disable quick regex mode
 
-    By default, typing \<Space\> in the search pattern is replaced by ".*". You can get classic mode by:
+    By default, typing \<Space\> in the search pattern is replaced by ".*". And to type an actual space, you will need ```\\ ```.
+    You can get classic mode by:
 ```
 let g:swoopPatternSpaceInsertsWildcard = 0
 ```

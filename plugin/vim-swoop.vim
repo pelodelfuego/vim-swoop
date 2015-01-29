@@ -381,16 +381,12 @@ function! s:getSwoopPattern()
 
     let patternLine = empty(patternLine) ? @/ : patternLine
 
-    if g:swoopIgnoreCase == 1
-        let patternLine . '\c'
-    endif
-
-    return g:swoopPatternSpaceInsertsWildcard == 1 ? join(split(patternLine), '.*')  : patternLine
+    return s:convertStringToRegex(patternLine)
 endfunction
 
 function! s:getBufPattern()
-    return g:swoopPatternSpaceInsertsWildcard == 1 ? join(split(getline(1)), '.*') : getline(1)
-endf
+    return s:convertStringToRegex(getline(1))
+endfunction
 
 function! s:getSwoopBufList()
     if s:multiSwoop == 0
@@ -471,6 +467,20 @@ function! s:getVisualSelectionSingleLine()
     return getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]]
 endfunction
 
+function! s:convertStringToRegex(rawPattern)
+    let modifiedPattern = ""
+    if g:swoopPatternSpaceInsertsWildcard == 1
+        let splitsRawPattern = split(a:rawPattern, '\\ ')
+        for s in splitsRawPattern
+            let modifiedPattern .= ' ' . substitute(s, ' ', '.*', "g")
+        endfor
+        let modifiedPattern = modifiedPattern[1:]
+    else
+        modifiedPattern = rawPattern
+    endif
+
+    return g:swoopIgnoreCase == 1 ? modifiedPattern.'\c' : modifiedPattern
+endfunction
 
 "   =======
 "   COMMAND
