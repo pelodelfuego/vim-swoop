@@ -230,7 +230,6 @@ git clone https://github.com/pelodelfuego/vim-swoop ~/.vim/bundle/vim-swoop
 
 Upcomming feature and improvement
 -----------------
-* SmartCase search
 
 
 Credit
