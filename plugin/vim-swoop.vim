@@ -37,6 +37,9 @@ endif
 if !exists('g:swoopPatternSpaceInsertsWildcard')
     let g:swoopPatternSpaceInsertsWildcard = 1
 endif
+if !exists('g:swoopIgnoreCase')
+    let g:swoopIgnoreCase = 0
+endif
 
 let s:multiSwoop = -1
 let s:freezeContext = 0
@@ -232,6 +235,7 @@ function! s:cursorMoved()
     if s:needFreezeContext() == 1
         return
     endif
+
     let beforeCursorMoved = getpos('.')
     let currentLine = beforeCursorMoved[1]
 
@@ -386,18 +390,14 @@ function! s:getSwoopPattern()
         let patternLine = getline(2)
     endif
 
-    if empty(patternLine)
-        return ''
-    else
-        let patternLine = patternLine.'\c'
-    endif
+    let patternLine = empty(patternLine) ? @/ : patternLine
 
-    return g:swoopPatternSpaceInsertsWildcard == 1 ? join(split(patternLine), '.*')  : patternLine
+    return s:convertStringToRegex(patternLine)
 endfunction
 
 function! s:getBufPattern()
-    return g:swoopPatternSpaceInsertsWildcard == 1 ? join(split(getline(1)), '.*') : getline(1)
-endf
+    return s:convertStringToRegex(getline(1))
+endfunction
 
 function! s:getSwoopBufList()
     if s:multiSwoop == 0
@@ -469,11 +469,29 @@ function! SwoopUnFreezeContext()
     let s:freezeContext = 0
 endfunction
 
+
+
+"   =======
+"   TOOLBOX
+"   =======
 function! s:getVisualSelectionSingleLine()
     return getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]]
 endfunction
 
+function! s:convertStringToRegex(rawPattern)
+    let modifiedPattern = ""
+    if g:swoopPatternSpaceInsertsWildcard == 1
+        let splitsRawPattern = split(a:rawPattern, '\\ ')
+        for s in splitsRawPattern
+            let modifiedPattern .= ' ' . substitute(s, ' ', '.*', "g")
+        endfor
+        let modifiedPattern = modifiedPattern[1:]
+    else
+        modifiedPattern = rawPattern
+    endif
 
+    return g:swoopIgnoreCase == 1 ? modifiedPattern.'\c' : modifiedPattern
+endfunction
 
 "   =======
 "   COMMAND

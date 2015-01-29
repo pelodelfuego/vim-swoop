@@ -113,9 +113,17 @@ For all buffer mode
 Configuration
 -------------
 
+* set search case insensitive
+
+    By default, smartcase is set, you can go to case insensitive search by:
+```
+let g:swoopIgnoreCase = 1
+```
+
 * Disable quick regex mode
 
-    By default, typing \<Space\> in the search pattern is replaced by ".*". You can get classic mode by:
+    By default, typing ```<Space>``` in the search pattern is replaced by ```.*```. And to type an actual space, you will need to escape it  ```\<Space>```.
+    You can get classic mode by:
 ```
 let g:swoopPatternSpaceInsertsWildcard = 0
 ```
@@ -127,7 +135,7 @@ let g:swoopPatternSpaceInsertsWildcard = 0
 let g:swoopAutoInserMode = 0
 ```
 
-* Disable auto insert mode
+* Change default layout
 
     By default, layout will be horizontal, you can set it vertical by:
 ```
@@ -163,7 +171,7 @@ Tips and Tricks
 
 * Search in swoop buffer
 
-    Since the context display depends of the cursor movement, you can lauch a search inside the search buffer
+    Since the context display depends of the cursor movement, you can lauch a search inside the search buffer.
 
 * Use VisualMode in the swoop Buffer
 
@@ -195,7 +203,17 @@ Interaction with other plugin
     endfunction
     ```
 
+* Other plugin
 
+    The main issue you will have will be displaying the context, to have compatibility 2 functions are exposed:
+    ```
+    call SwoopFreezeContext()
+    ```
+
+    ```
+    call SwoopUnFreezeContext()
+    ```
+    If you need anything else to enchanche compatibility with other plugin, please open an issue.
 
 
 Installation and dependancies
