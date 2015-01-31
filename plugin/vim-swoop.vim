@@ -43,6 +43,7 @@ endif
 
 let s:multiSwoop = -1
 let s:freezeContext = 0
+let s:userWrapScan = &wrapscan
 
 let s:swoopSeparator = "\t"
 
@@ -67,6 +68,7 @@ function! s:initSwoop()
     let s:swoopBuf = bufnr('%')
 
     call s:initHighlight()
+    set nowrapscan
 
     imap <buffer> <silent> <CR> <Esc>
     nmap <buffer> <silent> <CR> :call SwoopSelect()<CR>
@@ -95,6 +97,11 @@ endfunction
 function! s:exitSwoop()
     silent bw! swoopBuf
     call clearmatches()
+    if s:userWrapScan == 0
+        set nowrapscan
+    else
+        set wrapscan
+    endif
     let s:multiSwoop = -1
 endfunction
 
@@ -338,11 +345,13 @@ function! s:displayHighlight()
         endif
     endif
 
-    call matchadd("SwoopPatternHi", pattern)
+    let patternHi = pattern . '\c'
+
+    call matchadd("SwoopPatternHi", patternHi, -1)
 
     exec s:displayWin." wincmd w"
     call clearmatches()
-    call matchadd("SwoopPatternHi", pattern)
+    call matchadd("SwoopPatternHi", patternHi, -1)
     execute "wincmd p"
 
     call s:matchBufferLine(s:bufferLineList)
