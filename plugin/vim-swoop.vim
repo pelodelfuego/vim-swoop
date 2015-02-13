@@ -44,6 +44,13 @@ endif
 let s:multiSwoop = -1
 let s:freezeContext = 0
 
+if !exists('g:defaultWinSwoopWidth')
+    let g:defaultWinSwoopWidth = ""
+endif
+if !exists('g:defaultWinSwoopHeight')
+    let g:defaultWinSwoopHeight = ""
+endif
+
 let s:userWrapScan = &wrapscan
 let s:userCusrorLine = &cursorline
 
@@ -61,17 +68,16 @@ function! s:initSwoop()
     let s:displayWin = bufwinnr('%')
 
     if g:swoopWindowsVerticalLayout == 1
-        silent bot vsplit swoopBuf
+        silent execute "bot " . g:defaultWinSwoopWidth . "vsplit swoopBuf"
     else
-        silent bot split swoopBuf
+        silent execute "bot " . g:defaultWinSwoopHeight . "split swoopBuf"
     endif
 
     execute "setlocal filetype=".initFileType
     let s:swoopBuf = bufnr('%')
 
     call s:initHighlight()
-    set nowrapscan
-    set cursorline
+    call s:initCpo()
 
     imap <buffer> <silent> <CR> <Esc>
     nmap <buffer> <silent> <CR> :call SwoopSelect()<CR>
@@ -97,9 +103,12 @@ function! s:initHighlight()
     endif
 endfunction
 
-function! s:exitSwoop()
-    silent bw! swoopBuf
-    call clearmatches()
+function! s:initCpo()
+    set nowrapscan
+    set cursorline
+endfunction
+
+function! s:restoreCpo()
     if s:userWrapScan == 0
         set nowrapscan
     else
@@ -111,7 +120,12 @@ function! s:exitSwoop()
     else
         set cursorline
     endif
+endfunction
 
+function! s:exitSwoop()
+    silent bw! swoopBuf
+    call clearmatches()
+    call s:restoreCpo()
     let s:multiSwoop = -1
 endfunction
 
@@ -494,7 +508,7 @@ endfunction
 "   TOOLBOX
 "   =======
 function! s:getVisualSelectionSingleLine()
-    return getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]]
+    return getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]-1]
 endfunction
 
 function! s:convertStringToRegex(rawPattern)

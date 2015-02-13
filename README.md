@@ -156,6 +156,17 @@ let g:swoopLazyLoadFileType = 0
 let g:swoopHighlight = ["hi! link SwoopBufferLineHi Warning", "hi! link SwoopPatternHi Error"]
 ```
 
+* Default SwoopWindowSize
+
+    You can force default size for the swoop window with:
+```
+let g:defaultWinSwoopWidth = 12
+```
+or:
+```
+let g:defaultWinSwoopHeight = 15
+```
+
 
 Tips and Tricks
 ---------------
