@@ -190,7 +190,13 @@ endfunction
 function! SwoopSave()
     let currentLine = line('.')
     execute "g/.*/call s:setSwoopLine(s:getCurrentLineSwoopInfo())"
-    execute "wa"
+
+    for bufNr in s:getSwoopBufList()
+        execute "buffer" . bufNr
+        execute "w"
+    endfor
+
+    execute "buffer " . s:swoopBuf
     execute ":".currentLine
 endfunction
 
