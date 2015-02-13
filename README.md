@@ -170,10 +170,6 @@ let g:defaultWinSwoopHeight = 15
 
 Tips and Tricks
 ---------------
-* Use CursorLine
-
-    I strongly advise to highlight current line. It will help you to keep focus on the context of the current match.
-
 * Toggle mode
 
     You can toggle single and multi buffer mode, your Pattern will stay the same.

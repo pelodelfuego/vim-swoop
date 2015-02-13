@@ -1,4 +1,4 @@
-"   Vim Swoop   1.1.0
+"   Vim Swoop   1.1.2
 
 "Copyright (C) 2015 copyright Clément CREPY
 "
@@ -190,6 +190,7 @@ endfunction
 function! SwoopSave()
     let currentLine = line('.')
     execute "g/.*/call s:setSwoopLine(s:getCurrentLineSwoopInfo())"
+    execute "wa"
     execute ":".currentLine
 endfunction
 
@@ -508,7 +509,7 @@ endfunction
 "   TOOLBOX
 "   =======
 function! s:getVisualSelectionSingleLine()
-    return getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]-1]
+    return getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]]
 endfunction
 
 function! s:convertStringToRegex(rawPattern)
