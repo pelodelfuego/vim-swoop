@@ -43,7 +43,9 @@ endif
 
 let s:multiSwoop = -1
 let s:freezeContext = 0
+
 let s:userWrapScan = &wrapscan
+let s:userCusrorLine = &cursorline
 
 let s:swoopSeparator = "\t"
 
@@ -69,6 +71,7 @@ function! s:initSwoop()
 
     call s:initHighlight()
     set nowrapscan
+    set cursorline
 
     imap <buffer> <silent> <CR> <Esc>
     nmap <buffer> <silent> <CR> :call SwoopSelect()<CR>
@@ -102,6 +105,13 @@ function! s:exitSwoop()
     else
         set wrapscan
     endif
+
+    if s:userCusrorLine == 0
+        set nocursorline
+    else
+        set cursorline
+    endif
+
     let s:multiSwoop = -1
 endfunction
 
