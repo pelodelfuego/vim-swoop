@@ -70,6 +70,7 @@ vmap <Leader>l :call SwoopSelection()<CR>
 nmap <Leader>ml :call SwoopMulti()<CR>
 vmap <Leader>ml :call SwoopMultiSelection()<CR>
 ```
+NB: if you are in visual mode, you will land in normal mode
 
 You can disabledefault mapping by:
 ```
@@ -128,7 +129,7 @@ let g:swoopIgnoreCase = 1
 let g:swoopPatternSpaceInsertsWildcard = 0
 ```
 
-* Disable auto insert mode
+* Disable auto insert mode for normal mode
 
     By default, you will start in insert mode, you can disable it by:
 ```
