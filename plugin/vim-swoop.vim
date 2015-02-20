@@ -1,4 +1,4 @@
-"   Vim Swoop   1.1.2
+"   Vim Swoop   1.1.3
 
 "Copyright (C) 2015 copyright Clément CREPY
 "
@@ -53,6 +53,7 @@ endif
 
 let s:userWrapScan = &wrapscan
 let s:userCusrorLine = &cursorline
+let s:userHidden = &hidden
 
 let s:swoopSeparator = "\t"
 
@@ -75,6 +76,7 @@ function! s:initSwoop()
 
     execute "setlocal filetype=".initFileType
     let s:swoopBuf = bufnr('%')
+
 
     call s:initHighlight()
     call s:initCpo()
@@ -106,6 +108,7 @@ endfunction
 function! s:initCpo()
     set nowrapscan
     set cursorline
+    set hidden
 endfunction
 
 function! s:restoreCpo()
@@ -119,6 +122,12 @@ function! s:restoreCpo()
         set nocursorline
     else
         set cursorline
+    endif
+
+    if s:userHidden == 0
+        set nohidden
+    else
+        set hidden
     endif
 endfunction
 
@@ -469,9 +478,8 @@ function! s:setSwoopLine(swoopInfo)
         if oldLine !=# newLine
             call setline(lineTarget, newLine)
         endif
-
+    	execute "buffer ". s:swoopBuf
     endif
-    execute "buffer ". s:swoopBuf
 endfunction
 
 
