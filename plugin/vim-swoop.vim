@@ -123,7 +123,7 @@ function! s:restoreCpo()
 endfunction
 
 function! s:exitSwoop()
-    silent bw! swoopBuf
+    silent bd! swoopBuf
     call clearmatches()
     call s:restoreCpo()
     let s:multiSwoop = -1
