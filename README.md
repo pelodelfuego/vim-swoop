@@ -192,8 +192,8 @@ Tips and Tricks
     When you start swoop (either the mode) and don't enter any pattern, search result will be your last search.
 
 
-Interaction with other plugin
------------------------------
+Interaction with other plugin or option
+---------------------------------------
 * [ vim-multiple-cursor ]( https://github.com/terryma/vim-multiple-cursors )
 
     You can combine multiple and vim-swoop, to make it compatible (no context move while multiple cursor), you want to add this to you .vimrc
@@ -222,6 +222,19 @@ Interaction with other plugin
     call SwoopUnFreezeContext()
     ```
     If you need anything else to enchanche compatibility with other plugin, please open an issue.
+
+* Autocommand
+
+    AutoCommand default behaviour won't trigger ```BufWriteCmd``` which is needed by vim-swoop.
+    To get compatibility, you need to add ```nested``` to you AutoCommand, see the exemple bellow:
+
+    ```
+    autocmd BufLeave,FocusLost * silent! wall
+    ```
+    become:
+    ```
+    autocmd BufLeave,FocusLost * silent! nested wall
+    ```
 
 
 Installation and dependancies

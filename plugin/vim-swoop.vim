@@ -54,6 +54,7 @@ endif
 let s:userWrapScan = &wrapscan
 let s:userCusrorLine = &cursorline
 let s:userHidden = &hidden
+let s:userUpdateTime = &updatetime
 
 let s:swoopSeparator = "\t"
 
@@ -109,6 +110,7 @@ function! s:initCpo()
     set nowrapscan
     set cursorline
     set hidden
+    set updatetime=10
 endfunction
 
 function! s:restoreCpo()
@@ -129,6 +131,7 @@ function! s:restoreCpo()
     else
         set hidden
     endif
+    exec "set updatetime=" . s:userUpdateTime
 endfunction
 
 function! s:exitSwoop()
@@ -478,7 +481,7 @@ function! s:setSwoopLine(swoopInfo)
         if oldLine !=# newLine
             call setline(lineTarget, newLine)
         endif
-    	execute "buffer ". s:swoopBuf
+        execute "buffer ". s:swoopBuf
     endif
 endfunction
 
@@ -501,11 +504,11 @@ function! s:needFreezeContext()
     if mode() == 'v'
         return 1
     else
-       if s:freezeContext == 1
-           return 1
-       else
-           return 0
-       endif
+        if s:freezeContext == 1
+            return 1
+        else
+            return 0
+        endif
     endif
 endfunction
 
@@ -557,8 +560,8 @@ endif
 "   AUTO COMMAND
 "   ============
 augroup swoopAutoCmd
+    autocmd!    CursorHold    swoopBuf    :call   s:cursorMoved()
     autocmd!    CursorMovedI   swoopBuf   :call   s:cursorMoved()
-    autocmd!    CursorMoved    swoopBuf    :call   s:cursorMoved()
 
     autocmd!    BufWriteCmd    swoopBuf    :call   SwoopSave()
     autocmd!    BufLeave   swoopBuf   :call    SwoopSaveAndQuit()
