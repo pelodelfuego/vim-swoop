@@ -1,4 +1,4 @@
-"   Vim Swoop   1.1.3
+"   Vim Swoop   1.1.4
 
 "Copyright (C) 2015 copyright Clément CREPY
 "
