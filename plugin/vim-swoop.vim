@@ -82,8 +82,8 @@ function! s:initSwoop()
     call s:initHighlight()
     call s:initCpo()
 
-    imap <buffer> <silent> <CR> <Esc>
-    nmap <buffer> <silent> <CR> :call SwoopSelect()<CR>
+    inoremap <buffer> <silent> <CR> <Esc>
+    nnoremap <buffer> <silent> <CR> :call SwoopSelect()<CR>
 endfunction
 
 function! s:initHighlight()
@@ -548,10 +548,10 @@ endfunction
 "   COMMAND
 "   =======
 if g:swoopUseDefaultKeyMap == 1
-    nmap <Leader>l :call Swoop()<CR>
-    nmap <Leader>ml :call SwoopMulti()<CR>
-    vmap <Leader>l :call SwoopSelection()<CR>
-    vmap <Leader>ml :call SwoopMultiSelection()<CR>
+    nnoremap <Leader>l :call Swoop()<CR>
+    nnoremap <Leader>ml :call SwoopMulti()<CR>
+    vnoremap <Leader>l :call SwoopSelection()<CR>
+    vnoremap <Leader>ml :call SwoopMultiSelection()<CR>
 endif
 
 
