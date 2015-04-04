@@ -204,10 +204,8 @@ function! SwoopSave()
     execute "g/.*/call s:setSwoopLine(s:getCurrentLineSwoopInfo())"
 
     for bufNr in s:getSwoopBufList()
-        if bufname(bufNr) && !getbufvar(bufNr, '&buftype')
             execute "buffer" . bufNr
             update
-        endif
     endfor
 
     execute "buffer " . s:swoopBuf
