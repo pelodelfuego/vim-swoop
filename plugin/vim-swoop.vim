@@ -1,4 +1,4 @@
-"   Vim Swoop   1.1.4
+"   Vim Swoop   1.1.5
 
 "Copyright (C) 2015 copyright Clément CREPY
 "
@@ -51,11 +51,6 @@ if !exists('g:defaultWinSwoopHeight')
     let g:defaultWinSwoopHeight = ""
 endif
 
-let s:userWrapScan = &wrapscan
-let s:userCusrorLine = &cursorline
-let s:userHidden = &hidden
-let s:userUpdateTime = &updatetime
-
 let s:swoopSeparator = "\t"
 
 
@@ -107,6 +102,12 @@ function! s:initHighlight()
 endfunction
 
 function! s:initCpo()
+    echom "save / set CPO"
+    let s:userWrapScan = &wrapscan
+    let s:userCusrorLine = &cursorline
+    let s:userHidden = &hidden
+    let s:userUpdateTime = &updatetime
+
     set nowrapscan
     set cursorline
     set hidden
@@ -114,6 +115,7 @@ function! s:initCpo()
 endfunction
 
 function! s:restoreCpo()
+    echom "restore CPO"
     if s:userWrapScan == 0
         set nowrapscan
     else
@@ -135,10 +137,11 @@ function! s:restoreCpo()
 endfunction
 
 function! s:exitSwoop()
-    silent bd! swoopBuf
+    echom "exit swoop"
     call clearmatches()
     call s:restoreCpo()
     let s:multiSwoop = -1
+    silent bd! swoopBuf
 endfunction
 
 
@@ -191,6 +194,7 @@ function! SwoopMulti()
 endfunction
 
 function! SwoopQuit()
+    echom "quit swoop"
     call s:exitSwoop()
 
     execute s:displayWin." wincmd w"
