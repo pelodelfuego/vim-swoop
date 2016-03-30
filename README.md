@@ -30,7 +30,7 @@ From the swoop buffer, you can:
 * Select current result.
 *Exit and Save Swoop and go to the location of current match when you press \<CR\>*
 * Quit Swoop ```:q```.
-*Exit Swoop will save modifications and bring you back to the initial buffer and position.*
+*Exit Swoop will abort modifications and bring you back to the initial buffer and position.*
 * Toggle single and multi buffer mode
 
 ###single buffer mode
@@ -223,19 +223,6 @@ Interaction with other plugin or option
     ```
     If you need anything else to enchanche compatibility with other plugin, please open an issue.
 
-* Autocommand
-
-    AutoCommand default behaviour won't trigger ```BufWriteCmd``` which is needed by vim-swoop.
-    To get compatibility, you need to add ```nested``` to you AutoCommand, see the exemple bellow:
-
-    ```
-    autocmd BufLeave,FocusLost * silent! wall
-    ```
-    become:
-    ```
-    autocmd BufLeave,FocusLost * silent! nested wall
-    ```
-
 
 Installation and dependancies
 -----------------------------
@@ -246,6 +233,11 @@ Vim-Swoop is a pure vimscript plugin, no other dependancies.
 #### [Pathogen](https://github.com/tpope/vim-pathogen)
 ```
 git clone https://github.com/pelodelfuego/vim-swoop ~/.vim/bundle/vim-swoop
+```
+
+#### [Vundle](https://github.com/VundleVim/Vundle.vim)
+```
+Plugin 'pelodelfuego/vim-swoop'
 ```
 
 

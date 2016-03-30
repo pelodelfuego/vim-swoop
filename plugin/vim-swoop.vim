@@ -58,6 +58,7 @@ let s:swoopSeparator = "\t"
 "   BEGIN / EXIT WORKAROUND
 "   =======================
 function! s:initSwoop()
+    " echom 'init Swoop'
     let s:beforeSwoopBuf = bufnr('%')
     let s:beforeSwoopPos =  getpos('.')
     let initFileType = &ft
@@ -72,7 +73,6 @@ function! s:initSwoop()
 
     execute "setlocal filetype=".initFileType
     let s:swoopBuf = bufnr('%')
-
 
     call s:initHighlight()
     call s:initCpo()
@@ -102,7 +102,7 @@ function! s:initHighlight()
 endfunction
 
 function! s:initCpo()
-    echom "save / set CPO"
+    " echom 'save / set CPO'
     let s:userWrapScan = &wrapscan
     let s:userCusrorLine = &cursorline
     let s:userHidden = &hidden
@@ -115,7 +115,7 @@ function! s:initCpo()
 endfunction
 
 function! s:restoreCpo()
-    echom "restore CPO"
+    " echom 'restore CPO'
     if s:userWrapScan == 0
         set nowrapscan
     else
@@ -136,20 +136,18 @@ function! s:restoreCpo()
     exec "set updatetime=" . s:userUpdateTime
 endfunction
 
-function! s:exitSwoop()
-    echom "exit swoop"
-    call clearmatches()
-    call s:restoreCpo()
-    let s:multiSwoop = -1
-    silent bd! swoopBuf
+function! s:restorePosition()
+    " echom 'restore position'
+    execute s:displayWin." wincmd w"
+    call setpos('.', s:beforeSwoopPos)
 endfunction
-
 
 
 "   ==========================
 "   USER SHOSRTCUT INTERACTION
 "   ==========================
 function! Swoop()
+    " echom ' -> swoop'
     if s:multiSwoop == 0
         call setline(1, "")
     endif
@@ -170,6 +168,7 @@ function! Swoop()
 endfunction
 
 function! SwoopMulti()
+    " echom ' -> multiSwoop'
     if s:multiSwoop == 1
         call setline(2, "")
         execute ":2"
@@ -193,17 +192,8 @@ function! SwoopMulti()
     endif
 endfunction
 
-function! SwoopQuit()
-    echom "quit swoop"
-    call s:exitSwoop()
-
-    execute s:displayWin." wincmd w"
-    execute "buffer ". s:beforeSwoopBuf
-    call clearmatches()
-    call setpos('.', s:beforeSwoopPos)
-endfunction
-
 function! SwoopSave()
+    " echom ' -> save'
     let currentLine = line('.')
     execute "g/.*/call s:setSwoopLine(s:getCurrentLineSwoopInfo())"
 
@@ -216,27 +206,35 @@ function! SwoopSave()
     execute ":".currentLine
 endfunction
 
-function! SwoopSaveAndQuit()
-    call SwoopSave()
-    silent call SwoopQuit()
-endfunction
-
 function! SwoopSelect()
+    " echom ' -> select'
     if s:multiSwoop == 0
         if line('.') > 2
-            call s:selectSwoopInfo()
+            call s:selectPosition()
         else
             normal j
         endif
     else
         if line('.') > 3
-            call s:selectSwoopInfo()
+            call s:selectPosition()
         else
             normal j
         endif
     endif
+    call SwoopQuit()
     normal zz
 endfunction
+
+function! SwoopQuit()
+    " echom ' -> quit'
+    call s:restorePosition()
+    call clearmatches()
+    call s:restoreCpo()
+    let s:multiSwoop = -1
+
+    silent bd! swoopBuf
+endfunction
+
 
 function! SwoopSelection()
     let selectedText = s:getVisualSelectionSingleLine()
@@ -314,14 +312,14 @@ function! s:cursorMoved()
     call s:displayHighlight()
 endfunction
 
-function! s:selectSwoopInfo()
+function! s:selectPosition()
     let swoopInfo = s:getCurrentLineSwoopInfo()
-    call s:exitSwoop()
 
-    if len(swoopInfo) >= 3
-        execute "buffer ". swoopInfo[0]
-        execute ":".swoopInfo[1]
-    endif
+	let s:beforeSwoopPos[0] = swoopInfo[0]
+	let s:beforeSwoopPos[1] = swoopInfo[1]
+	let s:beforeSwoopPos[2] = 1
+	let s:beforeSwoopPos[3] = 0
+
 endfunction
 
 
@@ -567,6 +565,7 @@ augroup swoopAutoCmd
     autocmd!    CursorHold    swoopBuf    :call   s:cursorMoved()
     autocmd!    CursorMovedI   swoopBuf   :call   s:cursorMoved()
 
-    autocmd!    BufWriteCmd    swoopBuf    :call   SwoopSave()
-    autocmd!    BufLeave   swoopBuf   :call    SwoopSaveAndQuit()
+    autocmd!    BufWrite    swoopBuf    :call   SwoopSave()
+    autocmd!    BufWritePost    swoopBuf    :call delete('./swoopBuf')
+    autocmd!    BufWinLeave   swoopBuf   :call    SwoopQuit()
 augroup END
