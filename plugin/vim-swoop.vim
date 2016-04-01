@@ -426,7 +426,7 @@ function! s:getSwoopResultsLine(bufferList, pattern)
     for currentBuffer in a:bufferList
         execute "buffer ". currentBuffer
         let currentBufferResults = []
-        execute 'g/' . a:pattern . "/call add(currentBufferResults, s:extractCurrentLineSwoopInfo())"
+        execute 'silent g/' . a:pattern . "/call add(currentBufferResults, s:extractCurrentLineSwoopInfo())"
         if !empty(currentBufferResults)
             call add(results, bufname('%'))
             call add(s:bufferLineList, len(results) + 1 + s:multiSwoop)
@@ -540,7 +540,7 @@ function! s:convertStringToRegex(rawPattern)
         endfor
         let modifiedPattern = modifiedPattern[1:]
     else
-        modifiedPattern = rawPattern
+        let modifiedPattern = a:rawPattern
     endif
 
     return g:swoopIgnoreCase == 1 ? modifiedPattern.'\c' : modifiedPattern
