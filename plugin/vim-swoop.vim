@@ -1,4 +1,4 @@
-"   Vim Swoop   1.1.5
+"   Vim Swoop   1.1.6
 
 "Copyright (C) 2015 copyright Clément CREPY
 "
@@ -49,6 +49,10 @@ if !exists('g:defaultWinSwoopWidth')
 endif
 if !exists('g:defaultWinSwoopHeight')
     let g:defaultWinSwoopHeight = ""
+endif
+
+if !exists('g:escapeCharsForVisualSelection')
+    let g:escapeCharsForVisualSelection = "~/\]["
 endif
 
 let s:swoopSeparator = "\t"
@@ -528,7 +532,12 @@ endfunction
 "   TOOLBOX
 "   =======
 function! s:getVisualSelectionSingleLine()
-    return getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]]
+    let text = getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]-1]
+    if g:escapeCharsForVisualSelection == ""
+        return text
+    else
+        return escape(text, g:escapeCharsForVisualSelection)
+    endif
 endfunction
 
 function! s:convertStringToRegex(rawPattern)
