@@ -173,7 +173,7 @@ let g:defaultWinSwoopHeight = 15
     By default, any character that could break a search pattern gets escaped
 
 ```
-let g:escapeCharsForVisualSelection = "~/\]["
+let g:swoopEscapeChars = "~/\]["
 ```
 
     You can remove the feature by setting it as an empty string.

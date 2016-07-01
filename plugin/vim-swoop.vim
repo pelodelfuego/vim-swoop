@@ -51,8 +51,8 @@ if !exists('g:defaultWinSwoopHeight')
     let g:defaultWinSwoopHeight = ""
 endif
 
-if !exists('g:escapeCharsForVisualSelection')
-    let g:escapeCharsForVisualSelection = "~/\]["
+if !exists('g:swoopEscapeChars')
+    let g:swoopEscapeChars = "~/\]["
 endif
 
 let s:swoopSeparator = "\t"
@@ -533,10 +533,10 @@ endfunction
 "   =======
 function! s:getVisualSelectionSingleLine()
     let text = getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]-1]
-    if g:escapeCharsForVisualSelection == ""
+    if g:swoopEscapeChars == ""
         return text
     else
-        return escape(text, g:escapeCharsForVisualSelection)
+        return escape(text, g:swoopEscapeChars)
     endif
 endfunction
 
