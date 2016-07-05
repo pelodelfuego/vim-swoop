@@ -51,10 +51,6 @@ if !exists('g:defaultWinSwoopHeight')
     let g:defaultWinSwoopHeight = ""
 endif
 
-if !exists('g:swoopEscapeChars')
-    let g:swoopEscapeChars = "~/\]["
-endif
-
 let s:swoopSeparator = "\t"
 
 
@@ -533,11 +529,9 @@ endfunction
 "   =======
 function! s:getVisualSelectionSingleLine()
     let text = getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]-1]
-    if g:swoopEscapeChars == ""
-        return text
-    else
-        return escape(text, g:swoopEscapeChars)
-    endif
+    " escape characters that could throw an error:
+    " E682: Invalid search pattern or delimiter
+    return escape(text, "~/\][")
 endfunction
 
 function! s:convertStringToRegex(rawPattern)
