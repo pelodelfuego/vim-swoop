@@ -3,7 +3,7 @@ vim swoop
 
 Vim swoop is directly inspired from [helm-swoop](https://github.com/ShingoFukuyama/helm-swoop) we can find as emacs' plugin.
 
-It allows you to find and replace occurences in many buffers being aware of the context.
+It allows you to find and replace occurrences in many buffers being aware of the context.
 
 An animation means more than a boring speech...
 
@@ -23,7 +23,7 @@ When you start vim-swoop (multi or single buffer mode) you get 2 windows.
 First one contain context, the other is the swoop buffer. As you move the cursor to a match, the display windows will show the context.
 
 From the swoop buffer, you can:
-* Interactivly edit your search
+* Interactively edit your search
 * Navigate in results (and context) by moving the cursor
 * Edit and save Swoop Buffer ```:w```.
 *The changes will be repercuted on all files by saving the Swoop Buffer*
@@ -224,7 +224,7 @@ Interaction with other plugin or option
     If you need anything else to enchanche compatibility with other plugin, please open an issue.
 
 
-Installation and dependancies
+Installation and dependencies
 -----------------------------
 
 Vim-Swoop is a pure vimscript plugin, no other dependancies.
@@ -241,7 +241,7 @@ Plugin 'pelodelfuego/vim-swoop'
 ```
 
 
-Upcomming feature and improvement
+Upcoming feature and improvement
 -----------------
 
 

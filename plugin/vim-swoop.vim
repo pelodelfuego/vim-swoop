@@ -1,4 +1,4 @@
-"   Vim Swoop   1.1.5
+"   Vim Swoop   1.1.6
 
 "Copyright (C) 2015 copyright Clément CREPY
 "
@@ -528,7 +528,10 @@ endfunction
 "   TOOLBOX
 "   =======
 function! s:getVisualSelectionSingleLine()
-    return getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]]
+    let text = getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]-1]
+    " escape characters that could throw an error:
+    " E682: Invalid search pattern or delimiter
+    return escape(text, "~/\][")
 endfunction
 
 function! s:convertStringToRegex(rawPattern)
