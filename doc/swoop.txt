@@ -21,31 +21,158 @@ License : GNU license {{{
 
 }}}
 
-CONTENTS				*asterisk-contents*
+CONTENTS
 
 ==============================================================================
-INTRODUCTION					    *asterisk-introduction*
+INTRODUCTION
+
+Vim swoop is directly inspired from helm-swoop we can find as emacs' plugin.
+It allows you to find and replace occurences in many buffers being aware of the context.
+
+You can edit the swoopBuffer and the changes you applied will be save for all corresponding files by saving the buffer
+
+Especially useful to refactor a name in multiple files and keep control on it...
 
 ==============================================================================
-INSTALL						    *asterisk-install*
+USAGE						*swoop-usage*
 
-==============================================================================
-USAGE						*asterisk-usage*
+When you start vim-swoop (multi or single buffer mode) you get 2 windows.
+
+First one contain context, the other is the swoop buffer. As you move the cursor to a match, the display windows will show the context.
+
+From the swoop buffer, you can:
+    Interactivly edit your search
+    Navigate in results (and context) by moving the cursor
+    Edit and save Swoop Buffer.
+        The changes will be repercuted on all files by saving the Swoop Buffer
+    Select current result.
+        Exit Swoop and go to the location of current match.
+    Quit Swoop.
+        Exit Swoop will abort modifications and bring you back to the initial buffer and position.*
+    Toggle single and multi buffer mode
 
 ------------------------------------------------------------------------------
-KEY MAPPINGS 					*asterisk-key-mappings*
+SINGLE BUFFER MODE
+Start in insert mode, first line contains the search pattern.
+As you type the pattern, results will interactivly be displayed bellow.
+
 
 ------------------------------------------------------------------------------
-VARIABLES 					*asterisk-variables*
+MULTIPLE BUFFER MODE
+Start in insert mode, first line contains the buffer pattern, no pattern means all buffers.
+Buffer will be displayed interactivly bellow
+Second line contains the search pattern just like in single buffer mode
+
+==============================================================================
+INTERACTION
+------------------------------------------------------------------------------
+KEYMAP
+Default mapping to use vim-swoop are:
+
+Swoop current buffer
+    nmap <Leader>l :call Swoop()<CR>
+    vmap <Leader>l :call SwoopSelection()<CR>
+
+
+Swoop multi buffers
+    nmap <Leader>ml :call SwoopMulti()<CR>
+    vmap <Leader>ml :call SwoopMultiSelection()<CR>
+
+NB: if you are in visual mode, you will land in normal mode
+
+
+You can disabledefault mapping by:
+    let g:swoopUseDefaultKeyMap = 0
+
+
+------------------------------------------------------------------------------
+FUNCTION
+Those 2 action are also exposed by the following function:
+
+Current buffer function
+    :call SwoopPattern(pattern)
+
+
+Multi buffer function
+    For all buffer
+        :call SwoopMultiPattern(searchPattern)
+
+    For specific buffer
+        :call SwoopMultiPattern(searchPattern, bufPattern)
+
+
+------------------------------------------------------------------------------
+COMMAND
+A third way to acces Swoop is by a direct command:
+
+For single buffer mode
+    :Swoop <pattern>
+
+For all buffer mode
+    :Swoop! <pattern>
+
+
 
 
 ==============================================================================
-KNOWN ISSUES						*asterisk-issues*
+GLOBAL vARIABLE
+------------------------------------------------------------------------------
+BEHAVIOR
+Set search case insensitive
+    By default, smartcase is set, you can go to case insensitive search by:
+        let g:swoopIgnoreCase = 1
+
+Disable quick regex mode
+    By default, typing ```<Space>``` in the search pattern is replaced by ```.*```. And to type an actual space, you will need to escape it  ```\<Space>```.
+        You can get classic mode by:
+            let g:swoopPatternSpaceInsertsWildcard = 0
+
+Disable auto insert mode for normal mode
+    By default, you will start in insert mode, you can disable it by:
+        let g:swoopAutoInserMode = 0
+
+
+------------------------------------------------------------------------------
+VISUAL
+Lazy Filetype Load
+    By default, filetype are lazy loaded when itering over multiple.
+        let g:swoopLazyLoadFileType = 0
+
+
+Edit default HightLight
+    If default highlight is not relevant with your colorscheme, you can edit it by editing g:swoopHighlight variable.
+        let g:swoopHighlight = ["hi! link SwoopBufferLineHi Warning", "hi! link SwoopPatternHi Error"]
+
+Change default layout
+    By default, layout will be horizontal, you can set it vertical by:
+        let g:swoopWindowsVerticalLayout = 1
+
+Default SwoopWindowSize
+    You can force default size for the swoop window with:
+        let g:defaultWinSwoopWidth = 12
+        let g:defaultWinSwoopHeight = 15
+
 
 
 ==============================================================================
-CREDITS							*asterisk-credits*
+TIPS AND TRICKS
+* Toggle mode
+
+    You can toggle single and multi buffer mode, your Pattern will stay the same.
+
+    Calling again a mode while your already in will reset the search pattern.
 
 
-==============================================================================
-CHANGELOG						*asterisk-changelog*
+* Search in swoop buffer
+    Since the context display depends of the cursor movement, you can lauch a search inside the search buffer.
+
+
+* Use VisualMode in the swoop Buffer
+    When you use visual mode in the swoopBuffer, the context will freeze if you select more than 2 lines.
+    But it is really usefull on refactoring session: you can keep only the lines you want to refactor and execute global replace.
+
+
+* Use last search
+    When you start swoop (either the mode) and don't enter any pattern, search result will be your last search.
+
+
