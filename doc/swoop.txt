@@ -2,24 +2,6 @@
 
 Author  : pelodelfuego <clement.crepy@gmail.com>
 Version : 1.1.6
-License : GNU license {{{
-
-        Copyright (C) 2015 copyright Clément CREPY
-
-        This program is free software; you can redistribute it and/or modify
-        it under the terms of the GNU General Public License as published by
-        the Free Software Foundation; either version 2 of the License, or
-        (at your option) any later version.
-
-        This program is distributed in the hope that it will be useful,
-        but WITHOUT ANY WARRANTY; without even the implied warranty of
-        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-        GNU General Public License for more details.
-
-        You should have received a copy of the GNU General Public License
-        along with this program; if not, see <http://www.gnu.org/licenses/>.
-
-}}}
 
 CONTENTS
 
@@ -53,16 +35,16 @@ USAGE						        *swoop-usage*
 
         When you start vim-swoop (multi or single buffer mode) you get 2 windows.
 
-        First one contain context, the other is the |swoop buffer|. As you move the cursor to a match, the display windows will show the context.
+        First one contain context, the other is the swoop buffer. As you move the cursor to a match, the display windows will show the context.
 
-        From the |swoop buffer|, you can:
+        From the swoop buffer, you can:
 
             - Interactivly edit your search
 
             - Navigate in results (and context) by moving the cursor
 
-            - Edit and save |swoop buffer|.
-                    The changes will be repercuted on all files by saving the |swoop buffer|
+            - Edit and save swoop buffer.
+                    The changes will be repercuted on all files by saving the swoop buffer
 
             - Select current result.
 
@@ -154,10 +136,12 @@ BEHAVIOR                                            *swoop-variable-behaviour*
             By default, smartcase is set, you can go to case insensitive search by:
                 let g:swoopIgnoreCase = 1
 
+
         Disable quick regex mode
             By default, typing <Space>` in the search pattern is replaced by `.*`. And to type an actual space, you will need to escape it  <Space>.
                 You can get classic mode by:
                     let g:swoopPatternSpaceInsertsWildcard = 0
+
 
         Disable auto insert mode for normal mode
             By default, you will start in insert mode, you can disable it by:
@@ -176,9 +160,11 @@ VISUAL                                              *swoop-variable-visual*
             If default highlight is not relevant with your colorscheme, you can edit it by editing g:swoopHighlight variable.
                 let g:swoopHighlight = ["hi! link SwoopBufferLineHi Warning", "hi! link SwoopPatternHi Error"]
 
+
         Change default layout
             By default, layout will be horizontal, you can set it vertical by:
                 let g:swoopWindowsVerticalLayout = 1
+
 
         Default SwoopWindowSize
             You can force default size for the swoop window with:
@@ -189,18 +175,74 @@ VISUAL                                              *swoop-variable-visual*
 
 ==============================================================================
 TIPS                                                *swoop-tips*
+
         Toggle mode
             You can toggle single and multi buffer mode, your Pattern will stay the same.
             Calling again a mode while your already in will reset the search pattern.
 
-        Search in |swoop buffer|
+
+        Search in swoop buffer
             Since the context display depends of the cursor movement, you can lauch a search inside the search buffer.
 
-        Use VisualMode in the |swoop buffer|
+
+        Use VisualMode in the swoop buffer
             When you use visual mode in the swoopBuffer, the context will freeze if you select more than 2 lines.
             But it is really usefull on refactoring session: you can keep only the lines you want to refactor and execute global replace.
+
 
         Use last search
             When you start swoop (either the mode) and don't enter any pattern, search result will be your last search.
 
+
+==============================================================================
+CREDITS							                    *swoop-credits*
+
+vim-swoop is a pure vimL plugin
+
+- Plugin: https://github.com/pelodelfuego/vim-swoop
+- Author: pelodelfuego (https://github.com/pelodelfuego)
+
+
+Special thanks to Shingo Fukuyama for his amazing idea which has juste been ported to vim.
+
+Big thanks also to contributors (github):
+
+    - Anekos
+    - Davidmh
+    - All persons who add issues =)
+
+
+==============================================================================
+CHANGELOG						                    *asterisk-changelog*
+
+1.1.6	2016-07-04
+            Add vim help
+            Fix :x save
+            Update Readme
+
+1.1.5	2016-04-01
+            Fix cpo restore
+            Update Readme
+            Fix form david Kotchan
+
+1.1.3	2015-02-20
+            Auto save consistent way
+
+1.1.0	2015-01-29
+            Option for case sentitivity
+            Possibility to type actual space for smart search
+            Refactor
+
+1.0.5	2015-01-19
+            Enchanced Customisation
+            Exposed Command
+            Exposed Function
+            Lazy Filetype Load
+            Swoop Current visual Selection
+
+1.0.0   2015-01-07
+            Bring interactivity to Swoop Mecanism. Much more intutive and faster workflow.
+
+0.9     2014-12-14
+            Initial upload
 
