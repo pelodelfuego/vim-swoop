@@ -58,7 +58,7 @@ let s:swoopSeparator = "\t"
 "   BEGIN / EXIT WORKAROUND
 "   =======================
 function! s:initSwoop()
-    echom 'init Swoop'
+    "echom 'init Swoop'
     let s:beforeSwoopBuf = bufnr('%')
     let s:beforeSwoopPos =  getpos('.')
     let initFileType = &ft
@@ -102,7 +102,7 @@ function! s:initHighlight()
 endfunction
 
 function! s:initCpo()
-    echom 'save / set CPO'
+    "echom 'save / set CPO'
     let s:userWrapScan = &wrapscan
     let s:userCusrorLine = &cursorline
     let s:userHidden = &hidden
@@ -115,7 +115,7 @@ function! s:initCpo()
 endfunction
 
 function! s:restoreCpo()
-    echom 'restore CPO'
+    "echom 'restore CPO'
     if s:userWrapScan == 0
         set nowrapscan
     else
@@ -137,7 +137,7 @@ function! s:restoreCpo()
 endfunction
 
 function! s:restorePosition()
-    echom 'restore position'
+    "echom 'restore position'
     execute s:displayWin." wincmd w"
     call setpos('.', s:beforeSwoopPos)
 endfunction
@@ -147,7 +147,7 @@ endfunction
 "   USER SHOSRTCUT INTERACTION
 "   ==========================
 function! Swoop()
-    echom ' -> swoop'
+    "echom ' -> swoop'
     if s:multiSwoop == 0
         call setline(1, "")
     endif
@@ -168,7 +168,7 @@ function! Swoop()
 endfunction
 
 function! SwoopMulti()
-    echom ' -> multiSwoop'
+    "echom ' -> multiSwoop'
     if s:multiSwoop == 1
         call setline(2, "")
         execute ":2"
@@ -193,7 +193,7 @@ function! SwoopMulti()
 endfunction
 
 function! SwoopSave() "
-    echom ' -> save'
+    "echom ' -> save'
     let currentLine = line('.')
     execute "g/.*/call s:setSwoopLine(s:getCurrentLineSwoopInfo())"
 
@@ -207,7 +207,7 @@ function! SwoopSave() "
 endfunction
 
 function! SwoopSelect()
-    echom ' -> select'
+    "echom ' -> select'
     if s:multiSwoop == 0
         if line('.') > 2
             call s:selectPosition()
@@ -226,7 +226,7 @@ function! SwoopSelect()
 endfunction
 
 function! SwoopQuit()
-    echom ' -> quit'
+    "echom ' -> quit'
     bd! swoopBuf
     call s:restorePosition()
     call clearmatches()
