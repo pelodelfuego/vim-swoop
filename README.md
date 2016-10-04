@@ -27,8 +27,8 @@ From the swoop buffer, you can:
 * Navigate in results (and context) by moving the cursor.
 * Save Swoop buffer ```:w```.
 *The changes will be repercuted on all files by saving the swoop buffer*
-* Select current result ```\<CR\>```.
-*Exit and Save Swoop and go to the location of current match when you press *
+* Select current result ```<CR>```.
+*Exit and Save Swoop and go to the location of current match*
 * Quit Swoop ```:q```.
 *Exit Swoop without saving will abort modifications and bring you back to the initial buffer and position.*
 * Toggle single and multi buffer mode.
