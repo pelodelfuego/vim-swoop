@@ -569,6 +569,6 @@ augroup swoopAutoCmd
     autocmd!    CursorMovedI   swoopBuf   :call   s:cursorMoved()
 
     autocmd!    BufWrite    swoopBuf    :call   SwoopSave()
-    autocmd!    BufWinLeave   swoopBuf   :call  delete('./swoopBuf')
     autocmd!    BufWinLeave   swoopBuf   :call  SwoopQuit()
+    autocmd!    BufWinLeave   swoopBuf   :call  delete('./swoopBuf')
 augroup END
