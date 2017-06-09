@@ -33,7 +33,7 @@ From the swoop buffer, you can:
 *Exit Swoop without saving will abort modifications and bring you back to the initial buffer and position.*
 * Toggle single and multi buffer mode.
 
-###single buffer mode
+### single buffer mode
 Start in insert mode, first line contains the search pattern.
 
 As you type the pattern, results will interactivly be displayed bellow.
@@ -41,7 +41,7 @@ As you type the pattern, results will interactivly be displayed bellow.
 ![](https://raw.githubusercontent.com/pelodelfuego/vim-swoop/dev/doc/images/singleModeScreenshot.png)
 
 
-###multi buffer mode
+### multi buffer mode
 Start in insert mode, first line contains the buffer pattern, no pattern means all buffers.
 
 Buffer will be displayed interactivly bellow:
@@ -56,7 +56,7 @@ Second line contains the search pattern just like in single buffer mode:
 Interactions
 --------
 
-###KeyMap
+### KeyMap
 Default mapping to use vim-swoop are:
 
 * Swoop current buffer
@@ -77,7 +77,7 @@ You can disabledefault mapping by:
 let g:swoopUseDefaultKeyMap = 0
 ```
 
-###Function
+### Function
 Those 2 action are also exposed by the following function:
 
 * Current buffer function
@@ -97,7 +97,7 @@ For specific buffer
 :call SwoopMultiPattern(searchPattern, bufPattern)
 ```
 
-###Command
+### Command
 A third way to acces Swoop is by a direct command:
 
 For single buffer mode
@@ -114,7 +114,7 @@ For all buffer mode
 Configuration
 -------------
 
-###Behaviour
+### Behaviour
 * set search case insensitive
 
     By default, smartcase is set, you can go to case insensitive search by:
@@ -137,7 +137,7 @@ let g:swoopPatternSpaceInsertsWildcard = 0
 let g:swoopAutoInserMode = 0
 ```
 
-###User interface
+### User interface
 * Change default layout
 
     By default, layout will be horizontal, you can set it vertical by:
