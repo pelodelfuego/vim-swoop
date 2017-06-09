@@ -1,4 +1,4 @@
-"   Vim Swoop   1.1.6
+"   Vim Swoop   1.1.7
 
 "Copyright (C) 2015 copyright Clément CREPY
 "
@@ -58,6 +58,12 @@ let s:swoopSeparator = "\t"
 "   BEGIN / EXIT WORKAROUND
 "   =======================
 function! s:initSwoop()
+    if filereadable('./swoopBuf')
+        call delete('swoopBuf')
+        bd! swoopBuf
+    endif
+
+
     "echom 'init Swoop'
     let s:beforeSwoopBuf = bufnr('%')
     let s:beforeSwoopPos =  getpos('.')
@@ -227,6 +233,8 @@ endfunction
 
 function! SwoopQuit()
     "echom ' -> quit'
+
+    call delete('swoopBuf')
     bd! swoopBuf
     call s:restorePosition()
     call clearmatches()
@@ -569,6 +577,5 @@ augroup swoopAutoCmd
     autocmd!    CursorMovedI   swoopBuf   :call   s:cursorMoved()
 
     autocmd!    BufWrite    swoopBuf    :call   SwoopSave()
-    autocmd!    BufWinLeave   swoopBuf   :call  delete('./swoopBuf')
     autocmd!    BufWinLeave   swoopBuf   :call  SwoopQuit()
 augroup END
