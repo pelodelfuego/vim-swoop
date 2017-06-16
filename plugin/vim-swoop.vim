@@ -1,4 +1,4 @@
-"   Vim Swoop   1.1.7
+"   Vim Swoop   1.1.8
 
 "Copyright (C) 2015 copyright Clément CREPY
 "
@@ -235,7 +235,6 @@ function! SwoopQuit()
     "echom ' -> quit'
 
     call delete('swoopBuf')
-    bd! swoopBuf
     call s:restorePosition()
     call clearmatches()
     call s:restoreCpo()
