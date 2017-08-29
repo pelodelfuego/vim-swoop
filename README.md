@@ -134,7 +134,7 @@ let g:swoopPatternSpaceInsertsWildcard = 0
 
     By default, you will start in insert mode, you can disable it by:
 ```
-let g:swoopAutoInserMode = 0
+let g:swoopAutoInsertMode = 0
 ```
 
 ### User interface
