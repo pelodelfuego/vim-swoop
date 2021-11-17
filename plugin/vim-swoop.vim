@@ -510,7 +510,7 @@ function! s:matchBufferLine(bufferLineList)
 endfunction
 
 function! s:needFreezeContext()
-    if mode() == 'v'
+    if mode() == 'v' || mode() == 'V'
         return 1
     else
         if s:freezeContext == 1
